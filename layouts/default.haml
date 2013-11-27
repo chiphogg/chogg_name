@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+%html(lang="en")
+  %head
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/style.css">
+    %meta{:name => "generator", :content => 'nanoc ' + Nanoc::VERSION}
+
+    %title
+      = @item[:title]
+      [Charles R. Hogg III]
+
+  %body
+
+    #main
+      = preserve yield
+
+    #sidebar
+      %h2 Documentation
+      %ul
+        %li <a href="http://nanoc.ws/docs/">Documentation</a>
+        %li <a href="http://nanoc.ws/docs/tutorial/">Getting Started</a>
+
+      %h2 Community
+      %ul
+        %li <a href="http://groups.google.com/group/nanoc/">Discussion Group</a>
+        %li <a href="irc://chat.freenode.net/#nanoc">IRC Channel</a>
+        %li <a href="http://github.com/nanoc/nanoc/wiki/">Wiki</a>
+      </ul>
+    </div>
+  </body>
+</html>
