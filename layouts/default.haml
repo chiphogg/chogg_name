@@ -3,6 +3,8 @@
   %head
     <meta charset="utf-8">
     <link rel="stylesheet" href="/style.css">
+    <link href='http://fonts.googleapis.com/css?family=Scada' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Oranienbaum' rel='stylesheet' type='text/css'>
     <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
     %meta{:name => "generator", :content => 'nanoc ' + Nanoc::VERSION}
@@ -13,21 +15,10 @@
 
   %body
 
+    #title
+      Charles R. Hogg III
+
+    %hr
+
     #main
-      = preserve yield
-
-    #sidebar
-      %h2 Documentation
-      %ul
-        %li <a href="http://nanoc.ws/docs/">Documentation</a>
-        %li <a href="http://nanoc.ws/docs/tutorial/">Getting Started</a>
-
-      %h2 Community
-      %ul
-        %li <a href="http://groups.google.com/group/nanoc/">Discussion Group</a>
-        %li <a href="irc://chat.freenode.net/#nanoc">IRC Channel</a>
-        %li <a href="http://github.com/nanoc/nanoc/wiki/">Wiki</a>
-      </ul>
-    </div>
-  </body>
-</html>
+      = yield
