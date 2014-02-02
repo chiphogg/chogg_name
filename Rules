@@ -17,6 +17,11 @@ compile '/stylesheet/' do
   # don’t filter or layout
 end
 
+compile '/blog/' do
+  filter :haml
+  layout 'default'
+end
+
 compile '*' do
   if item.binary?
     # don’t filter binary items
@@ -30,6 +35,10 @@ end
 
 route '/stylesheet/' do
   '/style.css'
+end
+
+route '/blog/' do
+  '/blog/index.html'
 end
 
 route '*' do

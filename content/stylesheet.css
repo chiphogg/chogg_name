@@ -55,6 +55,23 @@ a {
   max-width: 40em;
 }
 
+#main #blog-listing, #post aside {
+  text-align: center;
+}
+
+#main #blog-listing h2, #post h1 {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+#main #blog-listing aside, #post aside {
+  margin-top: 0;
+}
+
+.footnotes {
+  margin-top: 100%;
+}
+
 pre, code, code span, kbd, var {
   font-family: Consolas, Inconsolata, Monaco, monospace;
 }

@@ -1,0 +1,7 @@
+#blog-listing
+  - sorted_articles.each do |post|
+    .post
+      %h2
+        = link_to post[:title], post.path
+      %aside
+        = 'Posted at ' + post[:created_at]
