@@ -22,6 +22,13 @@ compile '/blog/' do
   layout 'default'
 end
 
+compile '/blog/*' do
+  filter :pandoc, ['mathjax']
+  filter :colorize_syntax, :default_colorizer => :pygmentsrb
+  layout 'post'
+  layout 'default'
+end
+
 compile '*' do
   if item.binary?
     # don’t filter binary items
@@ -39,6 +46,11 @@ end
 
 route '/blog/' do
   '/blog/index.html'
+end
+
+route '/blog/*' do
+  root = attribute_to_time(item[:created_at]).strftime('/blog/%Y/%m/%d')
+  [root, ShortBlogName(item), 'index.html'].join('/')
 end
 
 route '*' do
