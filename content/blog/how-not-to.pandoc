@@ -1,0 +1,91 @@
+I've been wanting to redo my website for a few years now.
+
+I thought I could motivate myself by purchasing the domain name.  Paying actual
+money -- surely that would get me moving!  I learned otherwise when the one-year
+renewal bill came and I hadn't done a thing.
+
+But now I _do_ have a website (obviously).  So what was stopping me before, and
+what changed?
+
+## Grand plans
+
+The idea for the new site came at an exciting time in my life, when I had been
+voraciously reading about all kinds of new (to me) technologies.
+
+- [markdown] is lightweight, undistracting markup.  Kind of like [LaTeX], but
+  without looking like tag soup.
+- [knitr] lets you stick snippets of R code inside a markdown document, and
+  _automatically replace them with the results of **running** that code_.
+- [mathjax] finally -- _finally!_ -- brings the power of [LaTeX] equations to
+  the modern web (i.e., [MathML] instead of hideous rendered gifs).
+- [WebGL] puts plugin-free interactive 3D environments right in the browser
+  window.
+- [d3.js] offers mind-blowing[^1] data visualization, with native
+  [vector graphics] to boot!
+- [mathbox.js] promises a full-featured, in-browser, 3D plotting library.
+
+I wanted it all: writing posts in lightweight R/markdown, and _automatically_
+getting beautiful, interactive, browser-native plots on the other end.  It was
+hard to settle for anything less.
+
+## Building Rome in a day
+
+Looking back, it's no wonder I failed.  My Grand Vision was a world apart from
+the [default nanoc page] that greeted me on the (rare) occasions I tried working
+on my website.  The chasm between them was stark, paralyzing, overpowering.
+I tried to get every detail straight in my mind from the beginning.  It was like
+trying to build Rome in a day, or to eat a turkey dinner in a single bite.
+
+Progress came only when I jettisoned most of my feature list, and concentrated
+on getting a small core working.  This lets me practice and build familiarity;
+when I'm ready for more, I'll have a base to build on instead of starting from
+scratch.[^3]
+
+Right now, of the list above, only [markdown] (using [pandoc]) and [mathjax] are
+working.  I don't even have a good solution for images![^2]  And that's fine
+with me: when I want them, I'll only have to figure out _one_ thing, instead of
+_everything_.
+
+## The irony of perfectionism
+
+Many think of perfectionists as producing excellent work.  That's wrong:
+perfectionists produce virtually _no_ work.  Perfectionism doesn't mean high
+standards; it means doing things out of order.  It means wasting time on details
+when the foundation hasn't been laid.  Ironically, this leaves less time for
+more important work, so perfectionism _actually harms the overall quality of
+work_.
+
+It's a great relief to get the site as far along as it is.  If I have a blog
+post idea, _I can just **do** it_, instead of filing it away in the "list of
+things to write about once I make my blog".
+
+I still plan to do most or all of the things on my list.  The difference is that
+by doing them one at a time, and being satisfied with imperfect solutions,
+I actually stand a chance to get them _done_.
+
+[^1]: See [force-directed graphs](http://bl.ocks.org/mbostock/4062045),
+[bar chart transitions with object
+constancy](http://bl.ocks.org/mbostock/3943967),
+and [more](https://github.com/mbostock/d3/wiki/Gallery).
+[^2]: Git is [notoriously bad at large
+files](https://help.github.com/articles/working-with-large-files)
+[^3]: By the way, I also didn't realize how much the [default nanoc
+page](http://nanoc.ws/assets/images/tutorial/default-site.png) was holding me
+back.  I spent too long tolerating its irrelevant sidebar while I tinkered with
+other pages.  It wasn't until I finally blew it away that I realized how
+distracting it had been, and I was amazed how quickly I made progress once it
+was gone.  If _you're_ thinking of building a nanoc site, I recommend you gut
+the default sidebar right away.
+
+
+[mathbox.js]: http://acko.net/blog/making-mathbox/
+[default nanoc page]: http://nanoc.ws/assets/images/tutorial/default-site.png
+[markdown]: https://help.github.com/articles/github-flavored-markdown
+[knitr]: http://yihui.name/knitr/
+[mathjax]: http://www.mathjax.org/
+[WebGL]: http://get.webgl.org/
+[vector graphics]: http://en.wikipedia.org/wiki/Vector_graphics
+[d3.js]: http://d3js.org/
+[LaTeX]: http://latex-project.org/intro.html
+[MathML]: http://www.w3.org/Math/
+[pandoc]: http://johnmacfarlane.net/pandoc/
