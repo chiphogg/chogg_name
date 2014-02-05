@@ -68,7 +68,7 @@ I actually stand a chance to get them _done_.
 constancy](http://bl.ocks.org/mbostock/3943967),
 and [more](https://github.com/mbostock/d3/wiki/Gallery).
 [^2]: Git is [notoriously bad at large
-files](https://help.github.com/articles/working-with-large-files)
+files](https://help.github.com/articles/working-with-large-files).
 [^3]: By the way, I also didn't realize how much the [default nanoc
 page](http://nanoc.ws/assets/images/tutorial/default-site.png) was holding me
 back.  I spent too long tolerating its irrelevant sidebar while I tinkered with
