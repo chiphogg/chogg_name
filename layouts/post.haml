@@ -1,7 +1,8 @@
 #post
   %h1
     = item[:title]
-  %aside
-    = 'Posted at ' + item[:created_at]
+  - if item.attributes.has_key?(:created_at) 
+    %aside
+      = 'Posted at ' + item[:created_at]
   %article
     = yield
