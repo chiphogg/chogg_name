@@ -68,6 +68,10 @@ a {
   margin-top: 0;
 }
 
+#main table {
+  width: 100%;
+}
+
 .footnotes {
   margin-top: 100%;
 }
