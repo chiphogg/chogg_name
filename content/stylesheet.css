@@ -100,10 +100,10 @@ pre code {
   box-sizing: border-box;
 }
 code .hll { background-color: #ffffcc }
-code .c { color: #87ceeb} /* Comment */
+code .c, code .co { color: #87ceeb} /* Comment */
 code .err { color: #ffffff} /* Error */
 code .g { color: #ffffff} /* Generic */
-code .k { color: #f0e68c} /* Keyword */
+code .k, code .kw { color: #f0e68c} /* Keyword */
 code .l { color: #ffffff} /* Literal */
 code .n { color: #ffffff} /* Name */
 code .o { color: #ffffff} /* Operator */
@@ -148,9 +148,9 @@ code .nt { color: #f0e68c} /* Name.Tag */
 code .nv { color: #98fb98} /* Name.Variable */
 code .ow { color: #ffffff} /* Operator.Word */
 code .w { color: #ffffff} /* Text.Whitespace */
-code .mf { color: #ffffff} /* Literal.Number.Float */
+code .mf, code .fl { color: #ffffff} /* Literal.Number.Float */
 code .mh { color: #ffffff} /* Literal.Number.Hex */
-code .mi { color: #ffffff} /* Literal.Number.Integer */
+code .mi, code .dv { color: #ffffff} /* Literal.Number.Integer */
 code .mo { color: #ffffff} /* Literal.Number.Oct */
 code .sb { color: #ffffff} /* Literal.String.Backtick */
 code .sc { color: #ffffff} /* Literal.String.Char */
