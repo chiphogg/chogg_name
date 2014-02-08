@@ -23,6 +23,9 @@ compile '/blog/' do
 end
 
 compile '/blog/*' do
+  if item[:extension] == 'Rmd'
+    filter :knitr
+  end
   filter :pandoc, ['mathjax']
   filter :colorize_syntax, :default_colorizer => :pygmentsrb
   layout 'post'
