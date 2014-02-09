@@ -71,6 +71,9 @@ a {
 #main table {
   width: 100%;
 }
+#main table th {
+  background: #eee;
+}
 
 .footnotes {
   margin-top: 100%;
