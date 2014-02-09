@@ -1,0 +1,170 @@
+```{r setup, include=FALSE}
+require(knitr)
+opts_chunk$set(tidy=FALSE)
+# Don't use scientific notation.  For this post, we'd rather use integers.
+options('scipen'=20)
+```
+
+Recently, a friend asked me a fun math question. He's creating a real-life RPG
+for artists, called _illolife_[^1].  He wrote the experience point threshold for
+each level in terms of the previous level's threshold.  His question: is there a
+formula to get that threshold _directly_, without computing all the levels
+before it?
+
+I say it's "fun" because the level differences follow the [Fibonacci sequence].
+Specifically: If $X_i$ represents the experience needed for level $i$[^2], and
+$F_i$ is the $i$th Fibonacci number, then
+$$X_{i + 1} = X_i + 250 F_i.$$
+(The factor of 250 is just a scaling factor, and it's not important.)
+
+So the question boils down to: _is there a compact way to compute sums of
+Fibonacci numbers_?
+
+## Fibonacci sums are _almost_ Fibonacci numbers
+
+As it happens, Fibonacci _sums_ follow the same pattern as Fibonacci _numbers_,
+but they're always ahead 2 spots in the sequence, and off by 1:
+$$\sum_{i=1}^n F_i = F_{n + 2} - 1.$$
+Here are a few examples.
+
++-----+-------------------------------+-------------+
+| $n$ | $\sum\limits_{i=1}^n F_i$     | $F_{n + 2}$ |
++=====+===============================+=============+
+| $1$ | $\mathbf{1}$                  | $2$         |
++-----+-------------------------------+-------------+
+| $2$ | $1 + 1 = \mathbf{2}$          | $3$         |
++-----+-------------------------------+-------------+
+| $4$ | $1 + 1 + 2 + 3 = \mathbf{7}$  | $8$         |
++-----+-------------------------------+-------------+
+| $8$ | $1 + 1 + 2 + 3 + 5            | $55$        |
+|     |  + 8 + 13 + 21 = \mathbf{54}$ |             |
++-----+-------------------------------+-------------+
+
+What a delightful result!  It shows that Fibonacci sums are as easy to compute
+as Fibonacci numbers.  This raises the question -- how easy are Fibonacci
+numbers to compute?
+
+## Binet's formula and the golden ratio
+
+A simple expression, known as *[Binet's formula]*, can directly compute the $n$th
+Fibonacci number.  Using $\varphi \equiv \left(1 + \sqrt{5}\right) / 2$, the
+[golden ratio], we have:
+
+$$F_n = \frac{\varphi ^ n - \left(1 - \varphi\right) ^ n}{\sqrt{5}}.$$
+
+Here is a simple [R] function to compute it.
+
+```{r fib_closed_form}
+fib_closed_form <- function(n) {
+  # Compute the nth fibonacci number with Binet's formula, using the golden
+  # ratio 'phi'.
+  phi <- (1 + sqrt(5)) / 2
+  return ((phi ^ n - (1 - phi) ^ n) / sqrt(5))
+}
+```
+
+Binet's formula surprised me at first: it's a function of _irrational_ numbers
+which gives _integers_ every time!  Fortunately, it's fairly easy to work them
+out by hand to see why it works.  I did the first few, which made it seem a lot
+more plausible to me.
+
+I was worried that we might lose precision by going to floating point numbers
+and then coming back to integers.  To check whether this is a problem, we need
+a "gold standard" for Fibonacci numbers to compare against.  Here is another
+helper function which computes Fibonacci numbers directly from their definition.
+(Since it only uses integers, it shouldn't be affected by floating point
+errors.)
+
+```{r fib_direct}
+fib_direct <- function(n) {
+  # Compute the nth fibonacci number directly from the definition.
+  # (Assumes n >= 1.)
+  fib <- c(1, 1)
+  while (length(fib) < max(n)) {
+    fib <- c(fib, sum(tail(fib, 2)))
+  }
+  return (fib[n])
+}
+```
+
+Now we can compare the results from each.
+
+```{r fib_compare}
+# A set of n-values for testing purposes.
+n <- seq(from=5, to=80, by=5)
+
+# Compute Fibonacci numbers at these n-values by both methods, and compute the
+# difference between them.
+fib_compare <- data.frame(n=n,
+                          direct=fib_direct(n),
+                          binet=fib_closed_form(n))
+fib_compare$diff <- fib_compare$binet - fib_compare$direct 
+
+# Display the results.
+print(fib_compare, row.names=FALSE)
+```
+
+Looks like the concern was justified: things go awry somewhere between $F_{70}$
+and $F_{75}$.  Still, the formula works remarkably well until that point.
+Especially considering the application -- it'll be a long time before any
+illolifer hits level 70!
+
+## A surprising connection
+
+So far, we've used two convenient results:
+
+1. The sums of Fibonacci numbers are (almost) Fibonacci again.
+2. Binet's formula, $F_n = \left(\varphi^n - (1 - \varphi)^n\right) / \sqrt{5}$,
+   directly gives the $n$th Fibonacci number.
+
+Surprisingly, these results are related!
+
+Consider the first one: the sum over a sequence gives the same sequence[^3].
+For _continuous_ quantities (instead of _discrete_), we'd have integrals instead
+of sums, and functions instead of sequences.  So, this is like saying the
+_integral_ of a _function_ gives that same _function_.  This is a well-known
+property of [exponential functions]!  How suggestive -- do the Fibonacci numbers
+grow exponentially?
+
+They do.  Look at Binet's formula, and realize that
+$\left|1 - \varphi\right| < 1$; this means that the
+$\left(1 - \varphi\right)^n$ term is insignificant for large $n$.  What remains
+is
+$$F_n \approx \frac{\varphi^n}{\sqrt{5}} \,\,\,\,\,\,\,\,(\text{for large }n).$$
+This is exponential with a base of $\varphi$.
+
+So we needed two properties of Fibonacci numbers, and it turns out that their
+hidden exponential nature underpins both of these properties.
+
+## Finally: computing the experience for level $n$
+
+Putting all the pieces together, and remembering that
+$\varphi = \left(1 + \sqrt{5}\right) / 2$, we have
+
+$$X_n = 250\left(
+  \frac{\varphi^{n + 1} - \left(1 - \varphi\right)^{n + 1}}{\sqrt{5}} - 1
+\right)$$
+
+[^1]: This is [the link for
+illolife](https://www.facebook.com/groups/illolifeRPG/#_=_), but note that you
+have to be logged in to facebook to see anything.
+[^2]: $X_1 = 0$, since everybody starts at level 1.
+[^3]: Well, up to a small constant offset.
+
+Sanity check: what are the first few levels?
+
+```{r}
+X <- function(n) {
+  phi <- (1 + sqrt(5)) / 2
+  return (250 * ((phi ^ (n + 1) - (1 - phi) ^ (n + 1)) / sqrt(5) - 1))
+}
+cat(X(1:10))
+```
+
+These numbers exactly match the ones he provided me.  Success!
+
+[Fibonacci sequence]: http://en.wikipedia.org/wiki/Fibonacci_number
+[exponential functions]: http://www.animations.physics.unsw.edu.au/jw/calculus.htm#exp
+[golden ratio]: http://www.mathsisfun.com/numbers/golden-ratio.html
+[R]: http://www.r-project.org/
+[Binet's formula]: http://mathworld.wolfram.com/BinetsFibonacciNumberFormula.html
