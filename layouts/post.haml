@@ -4,5 +4,9 @@
   - if item.attributes.has_key?(:created_at) 
     %aside.posted_at
       = 'Posted at ' + item[:created_at]
+  - if item.attributes.has_key?(:tldr)
+    %aside.tldr
+      <b>tl;dr:</b>
+      = item[:tldr]
   %article
     = yield
