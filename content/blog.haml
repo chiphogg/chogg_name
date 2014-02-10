@@ -3,5 +3,8 @@
     .post
       %h2
         = link_to post[:title], post.path
+      - if post.attributes.has_key?(:tldr)
+        %aside.tldr
+          = post[:tldr]
       %aside.posted_at
         = 'Posted at ' + post[:created_at]
