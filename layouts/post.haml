@@ -2,7 +2,7 @@
   %h1
     = item[:title]
   - if item.attributes.has_key?(:created_at) 
-    %aside
+    %aside.posted_at
       = 'Posted at ' + item[:created_at]
   %article
     = yield

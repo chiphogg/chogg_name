@@ -68,6 +68,10 @@ a {
   margin-top: 0;
 }
 
+aside.posted_at {
+  color: #555;
+}
+
 #main table {
   width: 100%;
 }

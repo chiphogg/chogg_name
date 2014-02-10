@@ -3,5 +3,5 @@
     .post
       %h2
         = link_to post[:title], post.path
-      %aside
+      %aside.posted_at
         = 'Posted at ' + post[:created_at]
