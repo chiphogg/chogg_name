@@ -38,6 +38,9 @@ compile '*' do
   elsif item.identifier == '/CNAME/'
     # Don't do anything; leave it as is.
   else
+    if item[:extension] == 'Rmd'
+      filter :knitr
+    end
     filter :pandoc, ['mathjax']
     layout 'default'
   end
