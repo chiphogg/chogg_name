@@ -1,0 +1,130 @@
+Last week, the world was introduced to the [worst security bug in the history of
+the internet](http://xkcd.com/1353/). The so-called ["Heartbleed"
+vulnerability](http://heartbleed.com/) lets attackers steal arbitrary contents
+from remote servers -- and it was around for at least two years before security
+researchers found it.
+
+Consequently, _most people have to change most of their passwords_.
+If you want secure passwords[^1], this presents you with a dilemma.
+
+One option is to pick a _really good_ password; memorize it; and re-use it
+for most of your accounts.  **Problem:** _you are an easy target_.  When (not
+if!) the weakest one gets compromised, the first thing the attacker will do is
+try your password on other sites: email, banking, etc.  This "option" is really
+no option at all.
+
+Unfortunately, the natural alternative -- memorizing multiple distinct strong
+passwords -- is too hard for almost everybody.  It gets even worse if you change
+them regularly!  This approach inevitably leads to forgotten passwords (or else,
+it leads to you doing _nothing else with your life_ but memorizing them).
+
+A third way is to use different passwords, but store them somewhere secure.
+Surprisingly, many security experts recommend [writing them down on
+paper](https://www.schneier.com/blog/archives/2005/06/write_down_your.html).
+A variant of this is a little more secure, and a lot more convenient: password
+management _software_.
+
+## Enter: LastPass
+
+[LastPass] locally encrypts your passwords and stores them in the cloud, so you
+can access them anywhere.  It's a browser extension, so it recognizes password
+fields and makes them easy to fill in. Even better, it uses [two-factor
+authentication](https://helpdesk.lastpass.com/security-options/multifactor-authentication-options/google-authenticator/):
+even if somebody guesses my LastPass password, they still can't get my _other_
+passwords unless they also have (and can unlock) my phone.
+
+I admit that I put off switching to LastPass for years.  When I finally did,
+I was kicking myself for all my wasted effort on my old password scheme --
+a scheme that was _far less secure_ than what LastPass now gives me
+_effortlessly_!
+
+### Heartbleed response
+
+Fortunately, I had already made the switch when Heartbleed broke.  Changing my
+passwords was slightly annoying, but all it took was a few clicks per site:
+I didn't even have to memorize anything!
+
+Actually, Heartbleed is even harder to handle than I said earlier.  You can't
+change your passwords all at once; you have to wait for each affected website to
+patch OpenSSL _and_ reissue its certificate.[^2]  Here again, LastPass made
+things a breeze: it keeps a list of your affected accounts, and tells you
+when it's safe to change each one individually.
+
+## Objections
+
+Not everyone is rushing out to start using LastPass.  Here are some of the more
+common objections I've heard, and the reasons I don't find them convincing.
+
+### The Cloud?
+
+Many people are highly suspicious of storing passwords in the cloud, which _by
+definition_ makes them available anywhere in the world.  Aren't I just
+_asking_ for attackers from Chile to China to take everything that's mine?
+
+Not likely.  First, everything is encrypted before it goes to the cloud, so your
+passwords aren't really "out there" for the taking. Only people who know your
+master password can make sense of the data in the cloud, even if they somehow
+obtain it. Passwords _can_ be cracked, but stronger passwords take longer; it's
+not hard to choose one that will take _years_ on _even the best_ cracking setup.
+
+I'm assuming the second-worst case here: a LastPass server breach (otherwise,
+two-factor would keep the bad guys out even if they knew your password).  It's
+not so bad: once LastPass notifies you of the breach, you can just change all
+your passwords, and the attacker's information is worthless.
+
+The _worst_ case is an _undetected_ server breach.  But even this doesn't hurt
+you if you change your master password more often than the length of time it
+takes to crack it.
+
+### All your eggs in one basket
+
+It's a simple objection: if anybody _does_ obtain access to your vault, they
+suddenly have _everything_.  This makes your LastPass vault an extremely
+valuable target.  Wouldn't it be better to spread out the information to limit
+the worst-case damage?
+
+First, all my eggs _aren't_ in just one basket.  If somebody gets my Gmail
+password, they still can't log into my account without my phone, because
+I use Gmail's two-factor authentication.  (By the way, [so should
+you](http://lifehacker.com/5932700/please-turn-on-two-factor-authentication).)
+More and more sites support two-factor, and I use it for all of them.
+
+Second, that "one basket" comes from a company whose _entire business model_
+comes from being incredibly careful with passwords.  They've got excellent
+security practices:
+
+- All data is encrypted locally: their servers never see your data.
+- [Slow hashing,
+  ](https://helpdesk.lastpass.com/security-options/password-iterations-pbkdf2/)
+  which makes every password guess take longer.  (You'll never notice it for
+  a single password which you know.  But attackers need to try a few
+  septillion...)
+- [Two-factor authentication
+  ](https://helpdesk.lastpass.com/security-options/multifactor-authentication-options/)
+  of their own.
+
+It is still possible that there is some way to crack a LastPass vault.  But what
+makes you think your _current_ system is any harder to crack?
+
+### Simple Inertia
+
+Changing your password system is scary.  It takes effort, and brings
+uncertainty.
+
+Fortunately, you don't have to abandon your current password system to start
+using LastPass.  Just sign up, and add a few accounts to it.  Try it out until
+you're comfortable with it -- and if you aren't, you can always delete your
+LastPass account.  (They never get your unencrypted passwords, so you have
+nothing to lose.)
+
+## Go sign up now.
+
+You probably have a lot of passwords to change.  Why not sign up now, and save
+yourself the trouble of _memorizing_ them?
+
+[^1]: People who _don't_ want secure passwords are already as good as hosed.
+[^2]: If you changed your password too soon, you might as well not have changed
+it at all: if the site was still vulnerable, attackers could easily steal the
+new password.
+
+[LastPass]: https://lastpass.com/
