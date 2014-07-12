@@ -1,0 +1,31 @@
+# The main idea
+
+[Gaussian Processes](http://www.gaussianprocess.org/) give us _probability distributions_ over **curves and surfaces**.
+Unfortunately, these distributions can be hard to visualize.
+
+One approach uses **animations**.  Here are the key ideas (my own contributions are in bold):
+
+- Each _frame_ of the animation shows a curve/surface which is _drawn from the distribution_ we want to visualize.
+- Consecutive frames show very _similar_ elements (so the animation is _continuous_).
+- **Every frame has exactly the same statistical and kinematic properties (there are _no special "keyframes"_).**
+- **The motion is smooth and natural (no "kicks").**
+
+For example, here is an uncertain surface.  The datapoints have a gap in the middle.  The _entire_ surface is animated, but it moves more in the gap because the uncertainty is higher.
+
+<img width='100%' src="https://decf7ac3e53d531276ea42ee5a5b694383cc115e.googledrive.com/host/0B3Q6YQ55oxFDV3h4bU1BZWZzN3M/steel_strain.gif">
+
+Remarkably, just a single ingredient is needed: the _"Gaussian oscillator"_.  This is a particle moving on a continuous path, whose position probability is the standard normal distribution at all times.  The right-hand side of the following figure shows independent Gaussian oscillators.  The left-hand side visualizes a distribution of curves.  Each frame is obtained by multiplying the vector of Gaussian oscillators by the lower-Cholesky decomposition of the covariance matrix (center).
+
+<img width='100%' src="https://decf7ac3e53d531276ea42ee5a5b694383cc115e.googledrive.com/host/0B3Q6YQ55oxFDV3h4bU1BZWZzN3M/animated_matrix.gif">
+
+My further contribution is to recognize that **Gaussian oscillators are also Gaussian processes**, but in the _time_ domain.  This places all future work on Gaussian animations into a familiar and well-studied framework.
+
+# Further reading
+
+- Here is [a poster I presented](https://github.com/chiphogg/poster_isba_2014/blob/master/chogg_animated-randomness_isba-2014.pdf?raw=true)
+  at the [Twelfth World Meeting of ISBA](http://isba2014.eventos.cimat.mx/) (2014).
+- I gave an invited talk at the [SIAM CSE13](http://www.siam.org/meetings/cse13/) conference (2013).
+  Here is [a recording of the talk](https://client.blueskybroadcast.com/SIAM13/CS/siam_cse13_MS214_1/launch.asp?vAD=NTUwNDg=&vUS=LTk5&vMP=MA==&vHT=bGl2ZS5ibHVlc2t5YnJvYWRjYXN0LmNvbS8=&vPing=VHJ1ZQ==&vPICQ=RmFsc2U=&V=032118200237001051037189226106093058051138125067088087110207081113009231078125223121036208166198),
+  and the [corresponding slides](http://bit.ly/SmoothAni).
+
+_Paper forthcoming!_
