@@ -83,6 +83,11 @@ route '/blog/*' do
   [OutputDirectory(item), 'index.html'].join('/')
 end
 
+route '/assets/third_party/*/' do
+  trimmed_path = (item.identifier.split('/') - ['third_party']).join('/')
+  trimmed_path + '.' + item[:extension]
+end
+
 route '/assets/*/' do
   item.identifier.chop + '.' + item[:extension]
 end
