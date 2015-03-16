@@ -1,0 +1,4 @@
+title: Transparent, reproducible blogging with nanoc and knitr
+tldr: When I write R code in my blog posts, nanoc runs it and includes the
+  results in the output -- figures and all.
+short_url: nanoc_knitr
