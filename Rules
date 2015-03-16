@@ -73,6 +73,10 @@ route '/projects/' do
   '/projects/index.html'
 end
 
+route '/blog/*/data/*' do
+  # Do not output datafiles.
+end
+
 route '/blog/*' do
   [OutputDirectory(item), 'index.html'].join('/')
 end
