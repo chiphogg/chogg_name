@@ -74,9 +74,7 @@ route '/projects/' do
 end
 
 route '/blog/*' do
-  root = item.attributes.has_key?(:created_at) ?
-    attribute_to_time(item[:created_at]).strftime('/blog/%Y/%m/%d') : '/draft'
-  [root, ShortBlogName(item), 'index.html'].join('/')
+  [OutputDirectory(item), 'index.html'].join('/')
 end
 
 route '*' do
