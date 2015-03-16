@@ -32,13 +32,24 @@ class KnitrFilter < Nanoc::Filter
   identifier :knitr
 
   def run(content, params={})
-    # Escape content to fit inside R's double quotes inside bash single quotes.
+    require 'tempfile'
     output_dir = 'output' + OutputDirectory(@item)
-    escaped_content = content.gsub(%r{\\}, "\\\\\\").gsub(%r{"}, '\"').gsub(%r{'}, "'\"'\"'").gsub(%r{\n}, "\\n")
-    command = ('Rscript -e \'library(knitr);' +
-               'opts_knit$set(base.dir=normalizePath("' + output_dir + '"));' +
-               'opts_chunk$set(fig.path="");' +
-               'cat(knit(quiet=TRUE, text="' + escaped_content + '"))\'')
-    `#{command}`
+    file = Tempfile.new('knitr_output')
+    begin
+      file.write(content)
+      file.close
+      command = ('Rscript -e \'library(knitr);' +
+                 'opts_knit$set(base.dir=normalizePath("' + output_dir +
+                 '"));' +
+                 'opts_chunk$set(fig.path="");' +
+                 'cat(knit(quiet=TRUE, output=NULL, input="' + file.path +
+                 '"))\'')
+      output_filename = `#{command}`
+      result = IO.read(output_filename)
+      File.delete(output_filename)
+      return result
+    ensure
+      file.unlink
+    end
   end
 end
