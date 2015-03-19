@@ -1,108 +1,78 @@
-The key to science is _reproducibility_: if others can't check your work, it might as well not exist.
+The key to science is reproducibility: if others can't check your work, it might as well not exist.
 
-This idea is evolving into a concept called [_reproducible research_](https://www.coursera.org/course/repdata), a higher standard than most journals currently require.
-Reproducible Research publishes not only the _results_ of an analysis, but _the analysis itself_ --- including the raw data and software.
-Such research enables much faster progress: not only can others verify the results more easily (which all true scientists should welcome), but they can build on those results by modifying the analysis, rather than starting from scratch.
+This idea is evolving into a concept called [reproducible research](https://www.coursera.org/course/repdata): don't just publish the results of an analysis, publish the analysis itself --- including the raw data and software.
+This accelerates progress: not only is it easier to verify the results; it's easier to build on those results.
 
-This approach can improve any kind of technical analysis, including (especially?) scientific blogs.
-Blogs are already a fast way to publish ideas; if they include the data and code, it's even faster.
-This makes it easy for others to play with a concept (whether to build on it, or simply to learn-by-doing).
-It also makes it harder for bad ideas and innocent mistakes to hide (to say nothing of _intentional_ obfuscation!).
+This applies to scientific _blogging_, too.
+Blogs are already a fast way to spread ideas.
+Blogs with data and software included --- "_reproducible_ blogs" --- are even faster, since others can grab the code and play with the concepts you present.
+Not to mention, it's harder for mistakes to hide.
 
-I hope it's clear that transparent, reproducible blogging is something we should want.
-The rest of the post explains one way to get it.
+## Tips for reproducible blogging with knitr
 
-## Background
+I've set up this website to support reproducible blogging.
+Here are some of the things I've learned along the way.
 
-### The site generator: nanoc
+### Use a static site generator
 
-Hosting a blog can be complicated.
-The typical approach requires a database to store content, and a script to fetch, format, and display it.
-This means the server needs a lot of software to be installed.
-It also slows down the website.
-Simple HTML files would be much simpler and faster, but keeping headers and footers in sync across multiple pages is a huge headache.
+Dynamic sites build the page every time it loads.
+Static sites are nothing more than simple HTML files.
+For reproducible blogging, static sites have the edge.
 
-_Static site generators_ give the best of both worlds.
-You can write the content in a lightweight format (say, simple [markdown] rather than clunky HTML).
-The site generator turns it into HTML, and adds navigation elements to each page automatically.
+Re-running the R code every time the page loads would be too slow (and probably technically infeasible).
+Instead, run the code locally on your computer, and just generate the HTML files once.
+This is also much easier to host: no need for special software like PHP and MySQL; literally any webserver will do.
 
-In this model, files end up in one of two places:
+My weapon of choice is [nanoc], because it's flexible and extensible enough to handle whatever tools I want to use.
+The downside (for me) is that it's written in Ruby, and I don't know Ruby.
+But I'm glad I didn't let that stop me; in practice, it's been easy to pick up just what I need.
 
-- The **source repository**: content files, headers and footers, etc.
-  _This is the stuff that gets version-controlled._
-- The **output directory**: the actual files you stick on the webserver.
+### Automatically link to the source for every page
 
-The source repository can fully generate the output directory, so we don't need to keep the latter in version control.
+True transparency doesn't make people hunt; it advertises!
 
-### The analysis engine: R and knitr
+Set up your site so the source link is automatic; otherwise, you're sure to forget a page.
+My link is at the top right corner of every page; here's [how I made it](https://github.com/chiphogg/chogg_name/blob/3f8e2e1851bdf90282a9414b6843195fe7dd08a7/layouts/default.haml#L43-L45).
 
-[knitr] exists to make reproducible research easy.
-You write documents as usual --- in [markdown], [LaTeX], HTML, etc. --- but you sprinkle bits of [R] code wherever you want to do your analysis.
-When knitr processes your document, it runs any R code it finds and replaces that code with its output.
+### Think of knitr as a text filter
 
-This eliminates a whole part of my workflow (i.e., separately generating figures), taking a whole class of errors (staleness and forgetfulness) along with it.
-I'm seriously impressed with how much smoother my workflow has become.
-I've even used knitr to write [a scientific paper](https://github.com/chiphogg/paper_gaussian_oscillators) (currently under review).
+In other words: a thing which gets some input text, and yields some output text.
 
-## How to get nanoc to play with knitr
+Filters are nanoc's natural language.
+Here's [the design for my initial knitr filter](https://github.com/chiphogg/chogg_name/blob/3f8e2e1851bdf90282a9414b6843195fe7dd08a7/lib/default.rb#L15-L25).
+Its input is markdown with some R snippets; its output is the same markdown, but with the R snippets replaced by their results.
+This output gets fed in turn into a "pandoc" filter, which turns that markdown into HTML.
 
-Here's the main take-away of this section:
+(In fact, we'll soon see that knitr is a bit different if you want figures: it's better to think of it as a "filter _with side effects_".
+More on that soon.)
 
-> To get figures working with nanoc and knitr, **set knitr's `base.dir` option to the output directory for your post**.
+### Don't be scared by git's lousy image handling
 
-The rest of this section explains why this is the right answer, and goes over a few other things to keep in mind.
+I procrastinated for more than a year between setting up knitr and getting figures to work.
+The bogeyman was git's awful reputation for handling image files.
+Over the years, people have developed [a confusing array of not-quite-satisfactory workarounds](http://stackoverflow.com/questions/540535/managing-large-binary-files-with-git), and I didn't want to go through the hassle of comparing them and committing to one.
 
-### Filters
+Happily, git's handling of images turns out to be a complete non-issue, since _the images never end up in git_.
+Only the source code goes in version control.
+The output (including images) just gets copied to the webserver.
 
-nanoc works based on "filters": functions which input and output a string.
-This is an elegant approach, since multiple filters can be chained in sequence.
+### Set `base.path` to the output directory for your post
 
-In this case, we'll start with a `.Rmd` file (a [markdown] file with snippets of `R` code).
-A knitr-based filter replaces the R bits with the result of running them to yield pure-markdown text.
-This, in turn, is fed into a [pandoc](http://johnmacfarlane.net/pandoc/) filter to turn the markdown into HTML.
+I said earlier that knitr is a "filter with side effects".
+Here's what I mean.
 
-If you can live without figures, getting nanoc to work with knitr is fairly straightforward.
-I wrote a rudimentary filter for [my first knitr-based blog post](http://chogg.name/blog/2014/02/08/fibonacci_sums/) about a year ago; the hardest part was the [rather involved escaping](https://github.com/chiphogg/chogg_name/blob/91963584983af52b314101b049dac2b9d4b94f05/lib/default.rb#L19-L20) to shoehorn the text into the command line.
-It's not _perfect_ --- it does have [some issues with maximum length](http://stackoverflow.com/questions/22261436/rscript-appears-to-have-a-length-limit-options-to-circumvent-it) --- but it's pretty good.
+knitr runs whatever R code it finds and inserts the results in the text.
+But sometimes, that R code does more than simply output an answer; for example, when you construct a plot, it creates an image file.
+That's the "side effect".
+And it raises a question: where should the image file be created?
 
-### Figures
+Clearly, it needs to be created somewhere under the `output/` directory, or else it won't find its way to the webserver when we copy the files over.
+If we want to keep things neat (and if we don't want to worry about filename collisions!), we should probably stick it in a subdirectory specific to its post.
 
-When knitr processes code with plots, it creates image files as a side effect.
-Getting these same images to show up in the final webpage can be confusing.
-Fortunately, I eventually figured out a simple mental model to get it to work.
-You can use this mental model even if your specific setup is different from mine.
-
-There are two main questions.
-
-1. Where will the final processed text _look for the figures_?
-2. Where will the figures _actually be generated_?
-
-The simple-but-wrong solution is to set the `fig.path` option.
-Let's say your post is going to live at `http://yourdomain.com/this_post/`.
-That means that on your computer, the output file will live at `output/this_post/index.html` (relative to your nanoc directory).
-
-If we set `fig.dir` correctly for one of these questions, it will be wrong for the other one.
-Suppose we set `fig.dir = ''`, so the processed text looks for figures in the same directory (`http://yourdomain.com/this_post/`): then the figures themselves will be generated in the nanoc root directory, which is not even under `output/` at all!
-If instead we set `fig.dir = 'output/this_post'`, the figures will end up in a sensible place, but the webpage will be looking for them in `http://yourdomain.com/this_post/output/this_post/` --- what a mess!
-Either way, we end up with broken images.
-
-The correct solution is to use the `base.dir` option, which tells nanoc where it should think it is while it's generating the figures.
-
-Happily, one other obstacle I anticipated turned out to be no problem at all.
-git has [widely acknowledged difficulties with images](https://robinwinslow.co.uk/2013/06/11/dont-ever-commit-binary-files-to-git/).
-People have developed [a variety of not-very-satisfying workarounds](http://stackoverflow.com/questions/5756324/how-do-i-handle-images-in-a-git-repo), and I was paralyzed by the thought of choosing one.
-
-The solution is easy: don't version the figures; version the source which generates them.
-
-### Data files
-
-How to output the data files?
-It's simple: don't.
-Just keep them in the source repository.
-
-Of course, the data files still need to be _as easy as possible to access_ (you know, reproducible blogging and all).
-That's why every page on my website automatically links back to its source on github.
-From there, it's easy to find both the data files, and the source code which processes them.
+Fortunately, knitr has an option called `base.dir` which controls where the figures end up.
+Getting the figures right is as simple as setting this option to the appropriate directory for the current post.
+Don't be confused by the similarly-named `root.dir` option!
+For purposes of getting the figures to work, it's a complete red herring.
 
 ## An example!
 
@@ -123,19 +93,23 @@ names(d) <- c('x', 'y')
 
 # Make a simple scatterplot.
 require(ggplot2)
-print(ggplot(data=d, aes(x=x, y=y)) + geom_point())
+print(ggplot(data=d, aes(x=x, y=y))
+      + geom_point()
+      + ggtitle("A pointless, point-filled plot")
+      )
 ```
 
-## Other ideas
+## Like it?  Do it.
 
 I am far from the first to advocate and implement reproducible research in blogging.
-[Carl Boettiger](http://www.carlboettiger.info/) has maintained an [open lab notebook](http://www.carlboettiger.info/2012/09/28/Welcome-to-my-lab-notebook.html) for years; I'm sure there are many other examples which I haven't yet seen.
+For example, [Carl Boettiger](http://www.carlboettiger.info/) has maintained an [open lab notebook](http://www.carlboettiger.info/2012/09/28/Welcome-to-my-lab-notebook.html) for years; I'm sure there are many other examples which I haven't yet seen.
 
 But I don't want it to be merely possible; I want it to be _commonplace_.
 I want a world where technical bloggers who _don't_ share their data and software --- by default, on every post --- are regarded with suspicion.
-Explaining this implementation --- showing one more way to do this --- takes us one small step closer to that world.
+Sharing this implementation --- showing one more way to do this --- takes us one small step closer to that world.
 
 [markdown]: http://en.wikipedia.org/wiki/Markdown
 [LaTeX]: http://www.latex-project.org/
 [R]: http://www.r-project.org/
 [knitr]: http://yihui.name/knitr/
+[nanoc]: http://nanoc.ws/
