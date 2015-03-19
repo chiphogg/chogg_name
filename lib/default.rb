@@ -41,7 +41,7 @@ class KnitrFilter < Nanoc::Filter
       command = ('Rscript -e \'library(knitr);' +
                  'opts_knit$set(base.dir=normalizePath("' + output_dir +
                  '"));' +
-                 'opts_chunk$set(fig.path="");' +
+                 'opts_chunk$set(fig.path="", fig.cap="");' +
                  'cat(knit(quiet=TRUE, output=NULL, input="' + file.path +
                  '"))\'')
       output_filename = `#{command}`
