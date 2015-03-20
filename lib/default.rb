@@ -39,8 +39,10 @@ class KnitrFilter < Nanoc::Filter
       file.write(content)
       file.close
       command = ('Rscript -e \'library(knitr);' +
-                 'opts_knit$set(base.dir=normalizePath("' + output_dir +
-                 '"));' +
+                 'dir.create(file.path(normalizePath("."), "' + output_dir +
+                 '"), recursive=TRUE);' +
+                 'dir <- normalizePath("' + output_dir + '");' +
+                 'opts_knit$set(base.dir=dir);' +
                  'opts_chunk$set(fig.path="", fig.cap="");' +
                  'cat(knit(quiet=TRUE, output=NULL, input="' + file.path +
                  '"))\'')
