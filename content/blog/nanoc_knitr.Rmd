@@ -1,11 +1,11 @@
 The key to science is reproducibility: if others can't check your work, it might as well not exist.
 
 This idea is evolving into a concept called [reproducible research](https://www.coursera.org/course/repdata): don't just publish the results of an analysis, publish the analysis itself --- including the raw data and software.
-This accelerates progress: not only is it easier to verify the results; it's easier to build on those results.
+This accelerates progress: providing working code makes it easier to verify the results, and easier to build on them.
 
 This applies to scientific _blogging_, too.
 Blogs are already a fast way to spread ideas.
-Blogs with data and software included --- "_reproducible_ blogs" --- are even faster, since others can grab the code and play with the concepts you present.
+Blogs with data and software included --- "_reproducible_ blogs" --- are even faster.
 Not to mention, it's harder for mistakes to hide.
 
 ## Tips for reproducible blogging with knitr
@@ -72,7 +72,8 @@ Clearly, it needs to be created somewhere under the `output/` directory, or else
 If we want to keep things neat (and if we don't want to worry about filename collisions!), we should probably stick it in a subdirectory specific to its post.
 
 Fortunately, knitr has an option called `base.dir` which controls where the figures end up.
-Getting the figures right is as simple as setting this option to the appropriate directory for the current post.
+Getting the figures right is as simple as [setting this option to the appropriate directory for the current post](https://github.com/chiphogg/chogg_name/blob/8fd1187c2cf688ec115a99a0afd04ae4f21004f3/lib/default.rb#L42-L43).
+
 Don't be confused by the similarly-named `root.dir` option!
 For purposes of getting the figures to work, it's a complete red herring.
 
