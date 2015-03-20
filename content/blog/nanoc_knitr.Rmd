@@ -21,52 +21,54 @@ For reproducible blogging, static sites have the edge.
 
 Re-running the R code every time the page loads would be too slow (and probably technically infeasible).
 Instead, run the code locally on your computer, and just generate the HTML files once.
-This is also much easier to host: no need for special software like PHP and MySQL; literally any webserver will do.
+This also makes hosting much easier: you don't need special software like PHP and MySQL; literally any webserver will do.
 
-My weapon of choice is [nanoc], because it's flexible and extensible enough to handle whatever tools I want to use.
+My weapon of choice is [nanoc].
+It's very actively developed, and it's flexible and extensible enough to handle whatever tools I want to use.
 The downside (for me) is that it's written in Ruby, and I don't know Ruby.
 But I'm glad I didn't let that stop me; in practice, it's been easy to pick up just what I need.
 
 ### Automatically link to the source for every page
 
-True transparency doesn't make people hunt; it advertises!
+True transparency doesn't make people hunt.
+It advertises!
 
-Set up your site so the source link is automatic; otherwise, you're sure to forget a page.
-My link is at the top right corner of every page; here's [how I made it](https://github.com/chiphogg/chogg_name/blob/3f8e2e1851bdf90282a9414b6843195fe7dd08a7/layouts/default.haml#L43-L45).
+In my case, I put a link at the top right of each page to its own source.
+Here's [how I did it](https://github.com/chiphogg/chogg_name/blob/3f8e2e1851bdf90282a9414b6843195fe7dd08a7/layouts/default.haml#L43-L45) in nanoc.
 
 ### Think of knitr as a text filter
 
-In other words: a thing which gets some input text, and yields some output text.
+In other words: a thing which gets some input text, modifies it, and outputs the result.
 
-Filters are nanoc's natural language.
-Here's [the design for my initial knitr filter](https://github.com/chiphogg/chogg_name/blob/3f8e2e1851bdf90282a9414b6843195fe7dd08a7/lib/default.rb#L15-L25).
-Its input is markdown with some R snippets; its output is the same markdown, but with the R snippets replaced by their results.
-This output gets fed in turn into a "pandoc" filter, which turns that markdown into HTML.
-
-(In fact, we'll soon see that knitr is a bit different if you want figures: it's better to think of it as a "filter _with side effects_".
-More on that soon.)
+The [knitr filter](https://github.com/chiphogg/chogg_name/blob/3f8e2e1851bdf90282a9414b6843195fe7dd08a7/lib/default.rb#L15-L25) has one simple job: run the snippets of R code it finds, and stick the results in the text.
+It doesn't need to worry about other manipulations, since filters can be chained: the output of one is the input of the next.
+For instance, I use a [pandoc](http://johnmacfarlane.net/pandoc/) filter to turn the output of knitr into HTML for my website.
 
 ### Don't be scared by git's lousy image handling
 
-I procrastinated for more than a year between setting up knitr and getting figures to work.
+I procrastinated for more than a year between writing that knitr filter and adding support for figures.
 The bogeyman was git's awful reputation for handling image files.
-Over the years, people have developed [a confusing array of not-quite-satisfactory workarounds](http://stackoverflow.com/questions/540535/managing-large-binary-files-with-git), and I didn't want to go through the hassle of comparing them and committing to one.
+Over the years, people have developed [a confusing array of not-quite-satisfactory workarounds](http://stackoverflow.com/questions/540535/managing-large-binary-files-with-git).
+I didn't want to go through the hassle of comparing them and committing to one.
 
-Happily, git's handling of images turns out to be a complete non-issue, since _the images never end up in git_.
+Happily, git's handling of images turns out to be a complete non-issue, since _the images never end up in git_.[^1]
 Only the source code goes in version control.
 The output (including images) just gets copied to the webserver.
 
+I wish I'd realized sooner how easy it was!
+I could have been making beautiful plots for years.
+
 ### Set `base.path` to the output directory for your post
 
-I said earlier that knitr is a "filter with side effects".
+If we want figures, the simple "filter" model isn't enough.
+Instead, knitr becomes a "filter with side effects".
 Here's what I mean.
 
-knitr runs whatever R code it finds and inserts the results in the text.
-But sometimes, that R code does more than simply output an answer; for example, when you construct a plot, it creates an image file.
-That's the "side effect".
-And it raises a question: where should the image file be created?
+Sometimes, an R snippet does more than simply output an answer; for example, when you construct a plot, it creates an image file.
+That image is the "side effect".
+And it raises a question: where should that file be created?
 
-Clearly, it needs to be created somewhere under the `output/` directory, or else it won't find its way to the webserver when we copy the files over.
+Clearly, it needs to be created somewhere under the `output/` directory, or else it won't end up on the webserver when we copy the files over.
 If we want to keep things neat (and if we don't want to worry about filename collisions!), we should probably stick it in a subdirectory specific to its post.
 
 Fortunately, knitr has an option called `base.dir` which controls where the figures end up.
@@ -74,7 +76,7 @@ Getting the figures right is as simple as setting this option to the appropriate
 Don't be confused by the similarly-named `root.dir` option!
 For purposes of getting the figures to work, it's a complete red herring.
 
-## An example!
+## A simple example
 
 ```{r correlated_scatterplot, message=FALSE}
 # Fix the seed for the random number generator (for reproducibility).
@@ -99,17 +101,22 @@ print(ggplot(data=d, aes(x=x, y=y))
       )
 ```
 
-## Like it?  Do it.
+## Join the fun!
 
 I am far from the first to advocate and implement reproducible research in blogging.
-For example, [Carl Boettiger](http://www.carlboettiger.info/) has maintained an [open lab notebook](http://www.carlboettiger.info/2012/09/28/Welcome-to-my-lab-notebook.html) for years; I'm sure there are many other examples which I haven't yet seen.
+For example, [Carl Boettiger](http://www.carlboettiger.info/) has maintained an [open lab notebook](http://www.carlboettiger.info/2012/09/28/Welcome-to-my-lab-notebook.html) for years, and I'm sure there are many other examples which I haven't yet seen.
 
 But I don't want it to be merely possible; I want it to be _commonplace_.
-I want a world where technical bloggers who _don't_ share their data and software --- by default, on every post --- are regarded with suspicion.
-Sharing this implementation --- showing one more way to do this --- takes us one small step closer to that world.
+I want it to be _standard_.
+I want a world where it's so easy to do it right, people are suspicious of bloggers who don't.
+Sharing my implementation (and the tricks I learned along the way) is my modest contribution to making that world a reality.
 
 [markdown]: http://en.wikipedia.org/wiki/Markdown
 [LaTeX]: http://www.latex-project.org/
 [R]: http://www.r-project.org/
 [knitr]: http://yihui.name/knitr/
 [nanoc]: http://nanoc.ws/
+
+[^1]: Technically, since I'm using github pages to host my website, the images _do_ end up in a git repository; just not the _source_ repository.
+      If the images ever become a problem, I can just rebase and squash all the commits.
+      Yes, that's changing public history, but nobody should be cloning my github pages repo anyway; it's purely for hosting and its versioned history doesn't matter.
