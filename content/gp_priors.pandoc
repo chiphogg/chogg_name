@@ -1,0 +1,15 @@
+<div id='chart'></div>
+<script type='text/javascript'>
+// Load the Visualization API.
+google.load('visualization', '1.0', {'packages':['corechart']});
+// Set a callback to run when the Google Visualization API is loaded.
+google.setOnLoadCallback(drawChart);
+
+var myChart = null;
+function drawChart() {
+  myChart = AnimatedChart();
+  myChart.start();
+}
+</script>
+<button onclick='myChart.start();'>Start!</button>
+<button onclick='myChart.stop();'>Stop!</button>
