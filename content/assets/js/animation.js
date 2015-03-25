@@ -18,45 +18,81 @@ var DataAtTimestep = function(x, i) {
       });
 };
 
-// Use the global 'frame' variable to decide which to render, and increment it
-// at the end.
-var renderFrame = function(chart, x, data_func, max_frame, label) {
-  if (frame >= max_frame) {
-    clearInterval(timer_id);
-    frame = 0;
-    return true;
-  }
-  chart.load({
-    columns: [
-      ['x'].concat(x),
-      [label].concat(data_func(x, frame)),
-    ],
-  });
-  frame = frame + 1;
-  return false;
-};
+// Return a chart object.
+function AnimatedChart() {
+  // The number of milliseconds for each frame.
+  var frame_length = 1000;
+  // The initial timestamp (to be created on the initial run).
+  var start = null;
+  // The last frame which was rendered.
+  var last_frame_rendered = 0;
+  // The x-values for the data (copy from x_vals).
+  var x = x_vals.slice();
 
-var AnimationChartC3 = function(x, div_id, label, timeout_ms, c3_options) {
-  // Augment the user-provided options with options we'll always want.
-  c3_options.bindto = '#' + div_id;
-  c3_options.data = {
-    x: 'x',
-    columns: [
-      ['x'].concat(x),
-      [label].concat(DataAtTimestep(x, 0)),
-    ],
+  var data = new google.visualization.DataTable();
+  data.addColumn('number', 'x');
+  data.addColumn('number', 'y');
+  data.addRows(x.map(
+        function(z) {
+          return [z, Math.sin(z * 0.25 * Math.PI)];
+        }));
+
+  // Set chart options.
+  var options = {
+    title: 'Testing out',
+    width: 800,
+    vAxis: {
+      viewWindow: {
+        min: -2.0,
+        max: 2.0,
+      },
+    },
+    animation: {
+      duration: frame_length,
+      easing: 'linear',
+    },
+    height: 500};
+
+  var chart = new
+    google.visualization.LineChart(document.getElementById('chart'))
+  chart.draw(data, options);
+
+  var return_object = {
+    animation_id: null,
   };
-  //c3_options.transition = {
-  //  duration: timeout_ms
-  //};
-  // Generate the chart (we'll later return it).
-  var chart = c3.generate(c3_options);
-  // Attempt (unsuccessfully) to set the "ease" to linear.
-  d3.selectAll('.c3-line').transition().ease('linear').duration(10 * timeout_ms);
-  // Kick off the animation.
-  timer_id = setInterval(function() {
-    renderFrame(chart, x, DataAtTimestep, 20, label);
-  }, 0.5 * timeout_ms);
 
-  return chart
+  return_object.draw = function(timestamp) {
+    return_object.animation_id = requestAnimationFrame(return_object.draw);
+
+    // Check timestamps to see if we should redraw.
+    if (!start) start = timestamp;
+    var progress = timestamp - start;
+    var frame = Math.floor(progress / frame_length);
+    if (frame <= last_frame_rendered) {
+      return;
+    }
+    last_frame_rendered = frame;
+
+    // Update the data and redraw the frame.
+    var new_data = DataAtTimestep(x, frame);
+    for (var i = 0; i < new_data.length; ++i) {
+      data.setValue(i, 1, new_data[i]);
+    }
+    chart.draw(data, options);
+  };
+
+  // Convenience functions to start and stop this animation.
+  return_object.start = function() {
+    if (!return_object.animation_id) {
+      return_object.animation_id = requestAnimationFrame(return_object.draw);
+    }
+  };
+  return_object.stop = function() {
+    if (return_object.animation_id) {
+      cancelAnimationFrame(return_object.animation_id);
+      return_object.animation_id = null;
+    }
+  };
+
+  return return_object;
 };
