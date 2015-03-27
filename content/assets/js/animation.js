@@ -50,47 +50,26 @@ function AnimatedChart() {
     animation: {
       duration: frame_length,
       easing: 'linear',
+      startup: true,
     },
     height: 500};
-
-  var chart = new
-    google.visualization.LineChart(document.getElementById('chart'))
-  chart.draw(data, options);
 
   var return_object = {
     animation_id: null,
   };
 
-  return_object.draw = function(timestamp) {
-    return_object.animation_id = requestAnimationFrame(return_object.draw);
+  return_object.chart = new
+    google.visualization.LineChart(document.getElementById('chart'))
+  return_object.chart.draw(data, options);
 
-    // Check timestamps to see if we should redraw.
-    if (!start) start = timestamp;
-    var progress = timestamp - start;
-    var frame = Math.floor(progress / frame_length);
-    if (frame <= last_frame_rendered) {
-      return;
-    }
-    last_frame_rendered = frame;
+  return_object.draw = function() {
+    return_object.chart.draw(data, options);
+    ++last_frame_rendered;
 
     // Update the data and redraw the frame.
-    var new_data = DataAtTimestep(x, frame);
+    var new_data = DataAtTimestep(x, last_frame_rendered);
     for (var i = 0; i < new_data.length; ++i) {
       data.setValue(i, 1, new_data[i]);
-    }
-    chart.draw(data, options);
-  };
-
-  // Convenience functions to start and stop this animation.
-  return_object.start = function() {
-    if (!return_object.animation_id) {
-      return_object.animation_id = requestAnimationFrame(return_object.draw);
-    }
-  };
-  return_object.stop = function() {
-    if (return_object.animation_id) {
-      cancelAnimationFrame(return_object.animation_id);
-      return_object.animation_id = null;
     }
   };
 

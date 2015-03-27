@@ -3,13 +3,11 @@
 // Load the Visualization API.
 google.load('visualization', '1.0', {'packages':['corechart']});
 // Set a callback to run when the Google Visualization API is loaded.
-google.setOnLoadCallback(drawChart);
-
 var myChart = null;
-function drawChart() {
+google.setOnLoadCallback(loaded);
+
+function loaded() {
   myChart = AnimatedChart();
-  myChart.start();
+  google.visualization.events.addListener(myChart.chart, 'animationfinish', myChart.draw);
 }
 </script>
-<button onclick='myChart.start();'>Start!</button>
-<button onclick='myChart.stop();'>Stop!</button>
