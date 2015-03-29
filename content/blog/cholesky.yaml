@@ -1,0 +1,7 @@
+title: "Stumbling upon simplicity: the Cholesky decomposition"
+tldr: Sometimes things only seem complicated because we've never taken the time
+  to play with them. Once I stopped treating the Cholesky decomposition as a
+  black box, I found that it was surprisingly easy to compute.
+short_url: cholesky
+created_at: 2015-03-30 23:06
+kind: article
