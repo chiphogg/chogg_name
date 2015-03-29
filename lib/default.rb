@@ -44,7 +44,7 @@ class KnitrFilter < Nanoc::Filter
                  '"), recursive=TRUE);' +
                  'dir <- normalizePath("' + output_dir + '");' +
                  'opts_knit$set(base.dir=dir);' +
-                 'opts_chunk$set(fig.path="", fig.cap="");' +
+                 'opts_chunk$set(fig.path="", fig.cap="", fig.width=9);' +
                  'cat(knit(quiet=TRUE, output=NULL, input="' + file.path +
                  '"))\'')
       output_filename = `#{command}`
