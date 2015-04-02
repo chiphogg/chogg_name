@@ -27,28 +27,34 @@ function DatasetGenerator(x, mu, kFunc, N_t) {
   // The number of timesteps we need to keep in memory.
   var N_t = N_t;
   // The number of points in the dataset.
-  var N_x = x.length;
+  var N = x.length;
   // The time-domain covariance matrix (with compact support).
   var K_t = CompactSupportCovarianceMatrix(N_t);
   // Each row of L_t is a vector to multiply different timesteps.
   var L_t = LoopingCholesky(K_t);
-  var random_matrix = jStat.create(N_t, N_x, function(i, j) {
+  var random_matrix = jStat.create(N_t, N, function(i, j) {
     return jStat.normal.sample(0, 1);
   });
   // i indicates which vector from L_t to use, and also which row of the random
   // matrix to update.
   var i = N_t - 1;
+  // The covariance matrix in space.
+  K = jStat.create(N, N, function(i, j) {
+    return kFunc(x[i], x[j]);
+  });
+  var U = jStat.transpose(Cholesky(K));
 
   return_object.NextDataset = function() {
     // Compute the next data.
-    var new_data = jStat(L_t[i]).multiply(random_matrix)[0];
+    var independent_data = jStat(L_t[i]).multiply(random_matrix)[0];
     // Generate new random numbers.
-    for (var j = 0; j < N_x; ++j) {
+    for (var j = 0; j < N; ++j) {
       random_matrix[i][j] = jStat.normal.sample(0, 1);
     }
     // Update the counter.
     i = ((i > 0) ? i : N_t) - 1
     // Return the next dataset.
+    var new_data = jStat(independent_data).multiply(U)[0];
     return new_data;
   }
 
@@ -56,11 +62,11 @@ function DatasetGenerator(x, mu, kFunc, N_t) {
 };
 
 // Return a chart object.
-function AnimatedChart(dataset_generator) {
+function AnimatedChart(dataset_generator, div_id, title) {
   // The generator which generates new datasets.
   var generator = dataset_generator;
   // The number of milliseconds for each frame.
-  var frame_length = 1000;
+  var frame_length = 200;
   // Copy the x-values for the data.
   var x = generator.x.slice();
 
@@ -71,7 +77,7 @@ function AnimatedChart(dataset_generator) {
 
   // Set chart options.
   var options = {
-    title: 'Testing out',
+    title: title,
     width: 800,
     vAxis: {
       viewWindow: {
@@ -91,7 +97,7 @@ function AnimatedChart(dataset_generator) {
   };
 
   return_object.chart = new
-    google.visualization.LineChart(document.getElementById('chart'))
+    google.visualization.LineChart(document.getElementById(div_id))
   return_object.chart.draw(data, options);
 
   return_object.draw = function() {

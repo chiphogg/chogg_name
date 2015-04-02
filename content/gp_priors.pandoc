@@ -1,4 +1,5 @@
-<div id='chart'></div>
+<div id='chart_independent'></div>
+<div id='chart_SE'></div>
 <script type='text/javascript'>
 // Load the Visualization API.
 google.load('visualization', '1.0', {'packages':['corechart']});
@@ -12,10 +13,30 @@ var num_points = 101;
 var x = Array.apply(0, Array(num_points)).map(
     function(_, i) { return max_x * i / (num_points - 1); });
 
+var independent = function(x1, x2) {
+  return (x1 == x2) ? 1.0 : 0.0;
+};
+
+function SquaredExponential(ell, sigma) {
+  return function(x1, x2) {
+    var corr = sigma * sigma * Math.exp(-Math.pow((x1 - x2) / ell, 2));
+    return corr + 0.000001 * sigma * sigma * independent(x1, x2);
+  };
+};
+
 function loaded() {
-  myChart = AnimatedChart(
-      DatasetGenerator(x, jStat(x).multiply(0), undefined, 15));
+  independentChart = AnimatedChart(
+      DatasetGenerator(x, jStat(x).multiply(0), independent, 25),
+      'chart_independent',
+      'Independent datapoints (uncorrelated)');
   google.visualization.events.addListener(
-      myChart.chart, 'animationfinish', myChart.draw);
-}
+      independentChart.chart, 'animationfinish', independentChart.draw);
+
+  SEChart = AnimatedChart(
+      DatasetGenerator(x, jStat(x).multiply(0), SquaredExponential(1, 1), 25),
+      'chart_SE',
+      'Squared Exponential covariance');
+  google.visualization.events.addListener(
+      SEChart.chart, 'animationfinish', SEChart.draw);
+};
 </script>
