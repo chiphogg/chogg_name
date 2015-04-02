@@ -7,6 +7,23 @@ var timeout_ms = 1000;
 var frame = 0;
 var timer_id;
 
+// Thanks to http://stackoverflow.com/a/10284006 for zip() function.
+function zip(arrays) {
+  return arrays[0].map(function(_, i) {
+    return arrays.map(function(array) { return array[i]; })
+  });
+}
+
+// Create a covariance matrix with compact support for a given number of equally
+// spaced points.
+function CompactSupportCovarianceMatrix(N) {
+  return jStat.create(N, N, function(i, j) {
+    var dt = Math.abs(i - j) / N;
+    return (Math.pow(1 - dt, 6)
+            * ((12.8 * dt * dt * dt) + (13.8 * dt * dt) + (6 * dt) + 1));
+  });
+}
+
 // Set up the sequence of x-values: `num_points` of them, from 0 to `max_x`.
 var x_vals = Array.apply(0, Array(num_points)).map(
     function(v, i) { return max_x * i / (num_points - 1); });
