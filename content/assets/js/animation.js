@@ -1,12 +1,5 @@
 // Utility functions for animated plots.
 
-// Global variables I might find useful.
-var max_x = 8;
-var num_points = 101;
-var timeout_ms = 1000;
-var frame = 0;
-var timer_id;
-
 // Thanks to http://stackoverflow.com/a/10284006 for zip() function.
 function zip(arrays) {
   return arrays[0].map(function(_, i) {
@@ -24,35 +17,57 @@ function CompactSupportCovarianceMatrix(N) {
   });
 }
 
-// Set up the sequence of x-values: `num_points` of them, from 0 to `max_x`.
-var x_vals = Array.apply(0, Array(num_points)).map(
-    function(v, i) { return max_x * i / (num_points - 1); });
+function DatasetGenerator(x, mu, kFunc, N_t) {
+  var return_object = {};
 
-var DataAtTimestep = function(x, i) {
-  return x.map(
-      function(z) {
-        return Math.sin(z * 0.25 * Math.PI) * Math.cos(i * 0.1 * Math.PI);
-      });
+  // First section: declare member variables for the closure.
+  //
+  // The x-values for this closure.
+  return_object.x = x;
+  // The number of timesteps we need to keep in memory.
+  var N_t = N_t;
+  // The number of points in the dataset.
+  var N_x = x.length;
+  // The time-domain covariance matrix (with compact support).
+  var K_t = CompactSupportCovarianceMatrix(N_t);
+  // Each row of L_t is a vector to multiply different timesteps.
+  var L_t = LoopingCholesky(K_t);
+  var random_matrix = jStat.create(N_t, N_x, function(i, j) {
+    return jStat.normal.sample(0, 1);
+  });
+  // i indicates which vector from L_t to use, and also which row of the random
+  // matrix to update.
+  var i = N_t - 1;
+
+  return_object.NextDataset = function() {
+    // Compute the next data.
+    var new_data = jStat(L_t[i]).multiply(random_matrix)[0];
+    // Generate new random numbers.
+    for (var j = 0; j < N_x; ++j) {
+      random_matrix[i][j] = jStat.normal.sample(0, 1);
+    }
+    // Update the counter.
+    i = ((i > 0) ? i : N_t) - 1
+    // Return the next dataset.
+    return new_data;
+  }
+
+  return return_object;
 };
 
 // Return a chart object.
-function AnimatedChart() {
+function AnimatedChart(dataset_generator) {
+  // The generator which generates new datasets.
+  var generator = dataset_generator;
   // The number of milliseconds for each frame.
   var frame_length = 1000;
-  // The initial timestamp (to be created on the initial run).
-  var start = null;
-  // The last frame which was rendered.
-  var last_frame_rendered = 0;
-  // The x-values for the data (copy from x_vals).
-  var x = x_vals.slice();
+  // Copy the x-values for the data.
+  var x = generator.x.slice();
 
   var data = new google.visualization.DataTable();
   data.addColumn('number', 'x');
   data.addColumn('number', 'y');
-  data.addRows(x.map(
-        function(z) {
-          return [z, Math.sin(z * 0.25 * Math.PI)];
-        }));
+  data.addRows(zip([x, generator.NextDataset()]));
 
   // Set chart options.
   var options = {
@@ -60,8 +75,8 @@ function AnimatedChart() {
     width: 800,
     vAxis: {
       viewWindow: {
-        min: -2.0,
-        max: 2.0,
+        min: -3.0,
+        max: 3.0,
       },
     },
     animation: {
@@ -80,11 +95,11 @@ function AnimatedChart() {
   return_object.chart.draw(data, options);
 
   return_object.draw = function() {
+    // Kick off the animation.
     return_object.chart.draw(data, options);
-    ++last_frame_rendered;
 
-    // Update the data and redraw the frame.
-    var new_data = DataAtTimestep(x, last_frame_rendered);
+    // Compute the new data for the next frame.
+    var new_data = generator.NextDataset();
     for (var i = 0; i < new_data.length; ++i) {
       data.setValue(i, 1, new_data[i]);
     }
