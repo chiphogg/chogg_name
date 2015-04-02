@@ -35,3 +35,18 @@ function Cholesky(M) {
 
   return L;
 };
+
+// Rather an unusual function: we take the Cholesky decomposition, and we
+// replace all rows but the last with a cycled version of the last row.  This is
+// useful for animations.
+function LoopingCholesky(M) {
+  var L = Cholesky(M);
+  var n = jStat.rows(M);
+  for (var row = n - 2; row >= 0; --row) {
+    for (var col = 1; col < n; ++col) {
+      L[row][col - 1] = L[row + 1][col];
+    }
+    L[row][n - 1] = L[row + 1][0];
+  }
+  return L;
+};
