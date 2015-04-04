@@ -39,8 +39,11 @@ function DatasetGenerator(x, mu, kFunc, N_t) {
   // matrix to update.
   var i = N_t - 1;
   // The covariance matrix in space.
+  //
+  // We add a small amount of noise on the diagonal to help computational
+  // stability.
   K = jStat.create(N, N, function(i, j) {
-    return kFunc(x[i], x[j]);
+    return kFunc(x[i], x[j]) + 0.0000001 * independent(x[i], x[j]);
   });
   var U = jStat.transpose(Cholesky(K));
 

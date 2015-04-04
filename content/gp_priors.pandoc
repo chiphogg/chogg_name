@@ -1,4 +1,5 @@
 <div id='chart_independent'></div>
+<div id='chart_exp'></div>
 <div id='chart_SE'></div>
 <script type='text/javascript'>
 // Load the Visualization API.
@@ -19,8 +20,19 @@ var independent = function(x1, x2) {
 
 function SquaredExponential(ell, sigma) {
   return function(x1, x2) {
-    var corr = sigma * sigma * Math.exp(-Math.pow((x1 - x2) / ell, 2));
-    return corr + 0.000001 * sigma * sigma * independent(x1, x2);
+    return sigma * sigma * Math.exp(-Math.pow((x1 - x2) / ell, 2));
+  };
+};
+
+function Exponential(ell, sigma) {
+  return function(x1, x2) {
+    return sigma * sigma * Math.exp(-Math.abs((x1 - x2) / ell));
+  };
+};
+
+function Cosine(ell, sigma) {
+  return function(x1, x2) {
+    return sigma * sigma * Math.cos(Math.PI * (x2 - x1) / ell);
   };
 };
 
@@ -31,6 +43,13 @@ function loaded() {
       'Independent datapoints (uncorrelated)');
   google.visualization.events.addListener(
       independentChart.chart, 'animationfinish', independentChart.draw);
+
+  expChart = AnimatedChart(
+      DatasetGenerator(x, jStat(x).multiply(0), Exponential(1, 1), 25),
+      'chart_exp',
+      'Exponential covariance');
+  google.visualization.events.addListener(
+      expChart.chart, 'animationfinish', expChart.draw);
 
   SEChart = AnimatedChart(
       DatasetGenerator(x, jStat(x).multiply(0), SquaredExponential(1, 1), 25),
