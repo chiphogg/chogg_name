@@ -3,5 +3,6 @@ title: Animated visualizations of Gaussian Process priors
 js:
   - jstat 
   - linear_algebra
+  - covariance
   - animation
 ---
