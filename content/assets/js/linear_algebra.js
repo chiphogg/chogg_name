@@ -1,6 +1,11 @@
 // This file requires jStat, but I don't know how to include it from here.  For
 // now, I need to make sure to include it manually.
 
+function Sequence(from, to, length) {
+  return Array.apply(0, Array(length)).map(
+      function(_, i) { return from + (to * i) / (length - 1); });
+}
+
 // This function doesn't check that M actually *has* a Cholesky decomposition
 // (i.e., that it's a positive-definite symmetric matrix).  The caller is
 // responsible to ensure this.
