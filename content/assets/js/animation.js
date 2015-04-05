@@ -92,7 +92,6 @@ function AnimatedChart(dataset_generator, div_id, title, chart_type, options) {
         animation: {
           duration: frame_length,
           easing: 'linear',
-          startup: true,
         },
         height: 500
       },
@@ -115,6 +114,20 @@ function AnimatedChart(dataset_generator, div_id, title, chart_type, options) {
       data.setValue(i, 1, new_data[i]);
     }
   };
+
+  // Functions to start and stop the animations.
+  var listener_id = null;
+  return_object.stop = function() {
+    if (listener_id !== null) {
+      google.visualization.events.removeListener(listener_id);
+      listener_id = null;
+    }
+  }
+  return_object.start = function() {
+    listener_id = google.visualization.events.addListener(
+        return_object.chart, 'animationfinish', return_object.draw);
+    return_object.chart.draw(data, chart_options);
+  }
 
   return return_object;
 };

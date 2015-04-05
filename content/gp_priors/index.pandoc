@@ -17,21 +17,18 @@ function loaded() {
       'chart_independent',
       'Independent datapoints (uncorrelated)',
       google.visualization.ScatterChart);
-  google.visualization.events.addListener(
-      independentChart.chart, 'animationfinish', independentChart.draw);
+  independentChart.start();
 
   expChart = AnimatedChart(
       DatasetGenerator(x, jStat(x).multiply(0), Exponential(1, 1), 25),
       'chart_exp',
       'Exponential covariance');
-  google.visualization.events.addListener(
-      expChart.chart, 'animationfinish', expChart.draw);
+  expChart.start();
 
   SEChart = AnimatedChart(
       DatasetGenerator(x, jStat(x).multiply(0), SquaredExponential(1, 1), 25),
       'chart_SE',
       'Squared Exponential covariance');
-  google.visualization.events.addListener(
-      SEChart.chart, 'animationfinish', SEChart.draw);
+  SEChart.start();
 };
 </script>
