@@ -63,7 +63,9 @@ function DatasetGenerator(x, mu, kFunc, N_t) {
 };
 
 // Return a chart object.
-function AnimatedChart(dataset_generator, div_id, title) {
+function AnimatedChart(dataset_generator, div_id, title, chart_type) {
+  chart_type = (typeof chart_type !== 'undefined') ?
+    chart_type : google.visualization.LineChart;
   // The generator which generates new datasets.
   var generator = dataset_generator;
   // The number of milliseconds for each frame.
@@ -97,8 +99,7 @@ function AnimatedChart(dataset_generator, div_id, title) {
     animation_id: null,
   };
 
-  return_object.chart = new
-    google.visualization.LineChart(document.getElementById(div_id))
+  return_object.chart = new chart_type(document.getElementById(div_id))
   return_object.chart.draw(data, options);
 
   return_object.draw = function() {
