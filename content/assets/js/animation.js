@@ -63,7 +63,7 @@ function DatasetGenerator(x, mu, kFunc, N_t) {
 };
 
 // Return a chart object.
-function AnimatedChart(dataset_generator, div_id, title, chart_type) {
+function AnimatedChart(dataset_generator, div_id, title, chart_type, options) {
   chart_type = (typeof chart_type !== 'undefined') ?
     chart_type : google.visualization.LineChart;
   // The generator which generates new datasets.
@@ -79,32 +79,35 @@ function AnimatedChart(dataset_generator, div_id, title, chart_type) {
   data.addRows(zip([x, generator.NextDataset()]));
 
   // Set chart options.
-  var options = {
-    title: title,
-    width: 800,
-    vAxis: {
-      viewWindow: {
-        min: -3.0,
-        max: 3.0,
+  var chart_options = $.extend(
+      {
+        title: title,
+        width: 800,
+        vAxis: {
+          viewWindow: {
+            min: -3.0,
+            max: 3.0,
+          },
+        },
+        animation: {
+          duration: frame_length,
+          easing: 'linear',
+          startup: true,
+        },
+        height: 500
       },
-    },
-    animation: {
-      duration: frame_length,
-      easing: 'linear',
-      startup: true,
-    },
-    height: 500};
+      options);
 
   var return_object = {
     animation_id: null,
   };
 
   return_object.chart = new chart_type(document.getElementById(div_id))
-  return_object.chart.draw(data, options);
+  return_object.chart.draw(data, chart_options);
 
   return_object.draw = function() {
     // Kick off the animation.
-    return_object.chart.draw(data, options);
+    return_object.chart.draw(data, chart_options);
 
     // Compute the new data for the next frame.
     var new_data = generator.NextDataset();
