@@ -15,7 +15,8 @@ function loaded() {
   independentChart = AnimatedChart(
       DatasetGenerator(x, jStat(x).multiply(0), Independent(1), 25),
       'chart_independent',
-      'Independent datapoints (uncorrelated)');
+      'Independent datapoints (uncorrelated)',
+      google.visualization.ScatterChart);
   google.visualization.events.addListener(
       independentChart.chart, 'animationfinish', independentChart.draw);
 
