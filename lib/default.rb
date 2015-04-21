@@ -43,7 +43,7 @@ class KnitrFilter < Nanoc::Filter
                  'dir.create(file.path(normalizePath("."), "' + output_dir +
                  '"), recursive=TRUE);' +
                  'dir <- normalizePath("' + output_dir + '");' +
-                 'opts_knit$set(base.dir=dir);' +
+                 'opts_knit$set(base.dir=dir, root.dir=normalizePath("."));' +
                  'opts_chunk$set(fig.path="", fig.cap="", fig.width=9);' +
                  'cat(knit(quiet=TRUE, output=NULL, input="' + file.path +
                  '"))\'')
