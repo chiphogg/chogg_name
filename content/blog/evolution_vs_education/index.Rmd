@@ -1,0 +1,176 @@
+I recently found an interesting graph comparing countries' understanding of evolution with their GDP.
+More GDP _should_ mean better education, which _should_ mean more people who understand basic scientific concepts (like evolution).
+That's more or less what the graph shows, but there's a huge outlier.
+
+<blockquote class="twitter-tweet" lang="en"><p>There is a close relationship between GDP and an understanding of the theory of evolution – with one exception. <a href="http://t.co/stD3lBfqd1">pic.twitter.com/stD3lBfqd1</a></p>&mdash; Max Roser (@MaxCRoser) <a href="https://twitter.com/MaxCRoser/status/589845245862477824">April 19, 2015</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+The USA massively bucks the trend: despite boasting the second-highest GDP, we have the second-*lowest* rate of accepting evolution.
+Does the United States truly stand out as much as it appears?
+
+## A few missing datapoints
+
+In this dataset, the USA isn't just an evolutionary outlier; it's a geographical one, too.
+32 of the 34 countries are European: all except for Japan and the USA.
+The omission of Canada, which is similar both culturally and geographically, is especially startling.
+
+This suspiciously skewed distribution raises a question: has the author _manufactured_ an outlier by leaving out all the similar countries?
+The answer is no, for at least two reasons.
+
+First, consider the source.
+The data come from [a 2006 Science paper](http://www.sciencemag.org/content/313/5788/765.summary) which combined a variety of surveys from recent years.
+The 32 European countries come from the [Eurobarometer survey 63.1](http://www.icpsr.umich.edu/icpsrweb/ICPSR/studies/4563).
+The remaining two countries correspond to the nationalities of the authors (two American and one Japanese).
+Thus, it seems more likely that the US and Japan were added to the diverse Eurobarometer data, rather than any countries being omitted.
+
+Second, even if we do include Canada, it doesn't make the US any less of an outlier.
+[Canadian belief in evolution](http://angusreid.org/americans-are-creationists-britons-and-canadians-side-with-evolution/) is significantly higher than in the US (61% vs. 40%), while their [GDP](https://www.cia.gov/library/publications/the-world-factbook/rankorder/2004rank.html) is somewhat lower (\$44,500 vs. \$54,800).
+Canada is well in line with the rest of the data.
+
+```{r setup, include=FALSE}
+require(ggplot2)
+require(reshape2)
+require(scales)
+
+theme_set(theme_grey(base_size=20))
+
+# Estimate the index of x within values, returning fractional parts if it's
+# closer to one side.
+#
+# Assumes the values are sorted.
+#
+# Args:
+#   x:  A number.
+#   values:  A sorted numeric vector.
+FractionalIndex <- function(x, values) {
+  if (x < values[1]) {
+    return (NA)
+  }
+  for (i in 2:length(values)) {
+    if (x <= values[i]) {
+      lower <- values[i - 1]
+      upper <- values[i]
+      return (i - 1 + (x - lower) / (upper - lower))
+    }
+  }
+  return (NA)
+}
+
+# Convert the coordinates of a point to GDP and evolution belief figures.
+#
+# Args:
+#   d:  A data.frame with (at least) the following columns.
+#     x:  A number representing the x-coordinate of the point.
+#     y:  A number representing the y-coordinate of the point.
+#
+# Returns:
+#   The GDP of a country plotted at x.
+ComputeGdpAndEvo <- function(d) {
+  d$GDP <- d$x
+  d$evo <- d$y
+  for (i in 1:nrow(d)) {
+    d$GDP[i] <- 5000 * (1 + FractionalIndex(d$x[i], c(98.92, 150.26, 202.51,
+                                                      254.32, 307.64, 358.60,
+                                                      414.08, 464.38, 515.98,
+                                                      568.23)))
+    d$evo[i] <- 10 * (1 + FractionalIndex(d$y[i], c(108.38, 155.87, 204.45,
+                                                    253.24, 301.82, 348.66,
+                                                    398.53, 446.46)))
+  }
+  return (d[, !(names(d) %in% c('x', 'y'))])
+}
+
+# Indices of points which are "extreme" in one or more of these dimensions.
+#
+# Args:
+#   data:  A data.frame.
+#   column_names:  The names of the columns to check for outliers.
+#   num_sd:  The number of standard deviations to be considered an 'outlier'.
+#
+# Returns:
+#   The indices of the extreme points.
+Outliers <- function(data, column_names, num_sd=1) {
+  i <- c()
+  for (column_name in column_names) {
+    column <- data[[column_name]]
+    bounds <- median(column) + num_sd * sd(column) * c(-1, 1)
+    i <- union(i, which(column < bounds[1] | column > bounds[2]))
+  }
+  return (i)
+}
+
+file <- 'content/blog/evolution_vs_education/data/max_roser_evolution_gdp.txt'
+d <- ComputeGdpAndEvo(read.table(file, sep='\t', header=TRUE))
+```
+
+```{r gdp_evo, warning=FALSE, echo=FALSE}
+d.canada <- rbind(d, data.frame(Country='Canada', GDP=44500, evo=61,
+                                Reading=NA, Mathematics=NA, Science=NA))
+i <- c(Outliers(d.canada, c('GDP', 'evo'), num_sd=1.5),
+       which(d.canada$Country == 'Canada'))
+p <- (ggplot(data=d.canada, aes(x=GDP, y=evo))
+      + geom_point(size=3)
+      + geom_text(data=d.canada[i, ], aes(label=Country), vjust=1.3)
+      + scale_x_continuous('Gross Domestic Product per Capita', labels=dollar)
+      + scale_y_continuous('Percent of the Public that Believes in Evolution')
+      + ggtitle('Belief in Evolution versus National Wealth\n(Canada too!)')
+      )
+print(p)
+```
+
+Of course, there are many other countries in the world. 
+It would be fascinating to get good survey data for them, to see whether the US is as exceptional as it seems.
+But among the countries we do have, the United States really does seem to stand out.
+
+## Are we just measuring education?
+
+A friend suggested to me that maybe this has nothing to do with evolution in particular.
+Maybe this evolution score merely reflects lousy education in general.
+An intriguing suggestion!
+
+To find out, I checked the 2010 OECD World Education Rankings, which [The Guardian visualizes nicely here](http://www.theguardian.com/news/datablog/2010/dec/07/world-education-rankings-maths-science-reading).
+The US indeed scores poorly for Mathematics, but puts up respectable numbers for Reading and Science. 
+The [full dataset](https://docs.google.com/spreadsheet/ccc?key=0AonYZs4MzlZbdEMzTjN5cHY1MmlJOHI3cmZCamRQWEE&hl=en#gid=1) contains 65 countries, including all but two from the evolution graph[^missing].
+Can any of these explain the USA's outlier position?
+
+```{r evo_edu, fig.height=15, warning=FALSE, echo=FALSE, include=FALSE}
+d <- d[complete.cases(d), ]
+d.melt <- melt(d, id.vars=c('Country', 'GDP', 'evo'))
+i.out <- Outliers(d, c('GDP', 'evo', 'Reading', 'Science', 'Mathematics'),
+                  num_sd=1.5)
+outlier.countries <- d$Country[i.out]
+p <- (ggplot(data=d.melt, aes(x=value, y=evo))
+      + geom_point()
+      + geom_text(data=d.melt[which(d.melt$Country %in% outlier.countries), ],
+                  aes(hjust=ifelse(Country == 'Bulgaria', -0.1, 0.5),
+                      label=Country),
+                  vjust=1.3)
+      + facet_wrap(~ variable, ncol=1)
+      + scale_x_continuous('2010 OECD Score')
+      + scale_y_continuous('Belief in Evolution')
+      + ggtitle('Belief in Evolution vs. 2010 OECD Scores')
+      )
+print(p)
+```
+
+```{r gdp_edu, fig.height=15, warning=FALSE, echo=FALSE}
+p <- (ggplot(data=d.melt, aes(x=GDP, y=value))
+      + geom_point()
+      + geom_text(data=d.melt[which(d.melt$Country %in% outlier.countries), ],
+                  aes(hjust=ifelse(Country == 'Bulgaria', -0.1, 0.5),
+                      label=Country),
+                  vjust=1.3)
+      + facet_wrap(~ variable, ncol=1)
+      + scale_x_continuous(labels=dollar)
+      + scale_y_continuous('2010 OECD Score')
+      + ggtitle('2010 OECD Scores vs. GDP')
+      )
+print(p)
+```
+
+While the US is a little low in Mathematics (middle graph), it's certainly not an outlier.
+And the other two scores -- Reading and Science -- are precisely in line with the rest of the data.
+
+No matter how you slice it, America's dismal understanding of evolution can't be explained by its solidly mediocre education levels.
+
+[^missing]: Sorry, Cyprus and Malta.
