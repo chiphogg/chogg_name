@@ -34,8 +34,9 @@ ParseAbundance <- function(abundance_strings) {
                   replacement='\\2'))
 }
 
-UnstableIsotopesOfElement <- function(symbol) {
-  # Fetch a data.frame of unstable isotopes of the given element.
+IsotopesOfElement <- function(symbol) {
+  # Fetch a data.frame of isotopes of the given element which persist for
+  # seconds or more.
   #
   # Uses http://ie.lbl.gov data.
   #
@@ -44,7 +45,8 @@ UnstableIsotopesOfElement <- function(symbol) {
   #     symbol).
   #
   # Returns:
-  #   A data.frame consisting of all unstable isotopes of that element, with
+  #   A named list with two data.frames, 'stable' and 'unstable'.  Each
+  #   data.frame consists of the corresponding isotopes of that element, with
   #   columns 'name', 'half-life' (in years), and 'abundance' (which may be NA).
   require(XML)
   the_url <- sprintf('http://ie.lbl.gov/education/parent/%s_iso.htm', symbol)
@@ -52,6 +54,7 @@ UnstableIsotopesOfElement <- function(symbol) {
                              stringsAsFactors=FALSE,
                              trim=TRUE)[[1]][, c(1, 2, 4)]
   colnames(raw_table) <- c('Isotope', 'Halflife', 'Abundance')
+  i.stable <- which(raw_table$Halflife == 'stable')
 
   # Turn the half-life data (which is a string) into a number we can work with
   # (a duration in years).  This excludes elements whose half-life is shorter
@@ -61,7 +64,8 @@ UnstableIsotopesOfElement <- function(symbol) {
   # Parse the percent isotopic abundance for isotopes which have one.
   raw_table$Abundance <- ParseAbundance(raw_table$Abundance)
 
-  return (raw_table[which(!is.na(raw_table$Halflife)), ])
+  return (list(stable=raw_table[i.stable, ],
+               unstable=raw_table[which(!is.na(raw_table$Halflife)), ]))
 }
 
 # Source: http://ie.lbl.gov/education/isotopes.htm
@@ -76,6 +80,9 @@ elements <- c('H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg',
               'Th', 'Pa', 'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm',
               'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt', 'Ds', 'Rg',
               '12', '14')
-unstable_isotopes <- do.call(rbind, lapply(elements, UnstableIsotopesOfElement))
-write.table(unstable_isotopes, file='unstable_isotopes.txt', sep='\t',
-            row.names=FALSE)
+isotopes <- lapply(elements, IsotopesOfElement)
+for (label in c('stable', 'unstable')) {
+  isotope_subset <- do.call(rbind, lapply(isotopes, function(x) x[[label]]))
+  write.table(isotope_subset, file=sprintf('%s_isotopes.txt', label), sep='\t',
+              row.names=FALSE)
+}
