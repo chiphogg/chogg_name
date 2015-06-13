@@ -33,10 +33,12 @@ compile '/blog/*' do
   if item[:extension] == 'Rmd'
     filter :knitr
   end
-  filter :pandoc, args: ['mathjax']
-  filter :colorize_syntax, :default_colorizer => :pygmentsrb
-  layout 'post'
-  layout 'default'
+  if item[:extension] != 'R'
+    filter :pandoc, args: ['mathjax']
+    filter :colorize_syntax, :default_colorizer => :pygmentsrb
+    layout 'post'
+    layout 'default'
+  end
 end
 
 compile '/projects/*' do
