@@ -1,0 +1,156 @@
+
+
+```{r setup, include=FALSE}
+require(ggplot2)
+require(readr)
+
+theme_set(theme_grey(base_size=20))
+
+# Covariance matrix for noise "like" the given residuals.
+#
+# Assumes they were generated from a stationary process.
+EmpiricalCovarianceMatrix <- function(residuals) {
+  autocorrelation <- acf(residuals, lag.max=length(residuals))$acf
+  sigma_sq <- var(residuals)
+  return (outer(1:length(residuals), 1:length(residuals),
+                function(a, b) { sigma_sq * autocorrelation[abs(a - b) + 1] }))
+}
+
+# A matrix whose columns are the values of the supplied basis functions,
+# evaluated at the supplied points x.
+LinearLeastSquaresMatrix <- function(x, functions) {
+  sapply(functions,
+         function(f) {
+           sapply(x, function(x) { f(x) })
+         })
+}
+
+# A matrix for the disconnected linear model.
+DisconnectedLinearMatrix <- function(x, x_break) {
+  functions <- list(function(z) 1 * (z < x_break),
+                    function(z) as.numeric(z) * (z < x_break),
+                    function(z) 1 * (z > x_break),
+                    function(z) as.numeric(z) * (z > x_break))
+  LinearLeastSquaresMatrix(x, functions)
+}
+
+# A matrix for the disconnected linear model.
+ConnectedLinearMatrix <- function(x, x_break) {
+  functions <- list(function(z) 1,
+                    function(z) z,
+                    function(z) (z - x_break) * (z > x_break))
+  LinearLeastSquaresMatrix(x, functions)
+}
+
+# A matrix for a single trendline model.
+SingleLinearMatrix <- function(x) {
+  functions <- list(function(z) 1,
+                    function(z) z)
+  LinearLeastSquaresMatrix(x, functions)
+}
+
+# The "best fit" value (for the given model) for each y value.
+#
+# Args:
+#   y:  A vector of datapoints.
+#   model:  A model matrix: each column gives the value of one of the basis
+#     functions, evaluated at the same position as the corresponding y value.
+Fit <- function(y, model) {
+  model %*% solve(t(model) %*% model) %*% t(model) %*% y
+}
+
+# Build a data.frame from an RSS CSV data file.
+#
+# Args:
+#   rss_file_name:  The name of the RSS CSV file (columns 'year', 'month',
+#     'anomaly').
+#   cutoff_date:  The date when the rate of warming is supposed to have
+#     changed.
+RssDataset <- function(rss_file_name, cutoff_date) {
+  # Read the filename.
+  d <- read_csv(rss_file_name)
+  # Compute a proper 'date' column.
+  d$date <- as.Date(sprintf("%04d-%02d-01", d$year, d$month))
+
+  # Compute the fit points for a "single trendline" model.
+  d$single <- Fit(d$anomaly,
+                  SingleLinearMatrix(d$date))
+
+  # Compute the fit points for the "disconnected trendlines" model.
+  d$disconnected <- Fit(d$anomaly,
+                        DisconnectedLinearMatrix(d$date, cutoff_date))
+
+  # Compute the fit points for the "connected trendlines" model.
+  d$connected <- Fit(d$anomaly,
+                     ConnectedLinearMatrix(d$date, cutoff_date))
+
+  return (d)
+}
+
+# The number of degrees per century between the earliest and latest dates which
+# pass the filter.
+#
+# Args:
+#   dates:  A vector of dates.
+#   y:  A vector of values (presumably temperatures or temperature anomalies),
+#     one for each value in dates.
+#   filter:  A boolean function which accepts a date.
+DegreesPerCenturyWithFilter <- function(dates, y, filter) {
+  i_ok <- which(filter(dates))
+  i_extreme <- which(dates %in% range(dates[i_ok]))
+  days_per_century <- 36524.25
+  diff_days <- diff(as.numeric(dates[i_extreme]))
+  return (diff(y[i_extreme]) / (diff_days / days_per_century)) 
+}
+
+# The number of degrees per century between the earliest and latest dates.
+#
+# Args:
+#   dates:  A vector of dates.
+#   y:  A vector of values (presumably temperatures or temperature anomalies),
+#     one for each value in dates.
+DegreesPerCentury <- function(dates, y) {
+  DegreesPerCenturyWithFilter(dates, y, function(d) as.logical(d) | TRUE)
+}
+
+# How many years of warming (at a given rate) to get a change in temperature?
+YearsOfWarming <- function(temp_change, rate_per_century) {
+  temp_change / rate_per_century * 100
+}
+
+# Cutoff date variable, and associated functions.
+cutoff_date <- as.Date("1997-02-15")
+Before <- function(d) d < cutoff_date
+After <- function(d) d > cutoff_date
+
+# Construct the RSS data frame.
+rss_file <- 'content/blog/connect_your_trendlines/data/rss.csv'
+d_rss <- RssDataset(rss_file, cutoff_date)
+
+single_trendline_slope <- DegreesPerCentury(d_rss$date, d_rss$single)
+jump <- max(diff(d_rss$disconnected))
+```
+
+The slope for a single trendline is `r single_trendline_slope`.
+
+The **disconnected** slope before is
+`r DegreesPerCenturyWithFilter(d_rss$date, d_rss$disconnected, Before)`,
+and the slope after is
+`r DegreesPerCenturyWithFilter(d_rss$date, d_rss$disconnected, After)`.
+
+The **connected** slope before is
+`r DegreesPerCenturyWithFilter(d_rss$date, d_rss$connected, Before)`,
+and the slope after is
+`r DegreesPerCenturyWithFilter(d_rss$date, d_rss$connected, After)`.
+
+The jump is `r jump`, which is `r YearsOfWarming(jump, single_trendline_slope)`
+years of warming at the single-trendline rate.
+
+```{r test}
+print(ggplot(data=d_rss, aes(x=date))
+      + geom_line(colour='grey', aes(y=anomaly))
+      + geom_line(colour='purple', aes(y=single))
+      + geom_line(colour='red', aes(y=disconnected))
+      + geom_line(colour='blue', aes(y=connected))
+      )
+```
