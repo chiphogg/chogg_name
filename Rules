@@ -29,6 +29,10 @@ compile '/projects/' do
   layout 'default'
 end
 
+compile '/blog/*/data/*' do
+  # Do not compile datafiles.
+end
+
 compile '/blog/*' do
   if item[:extension] == 'Rmd'
     filter :knitr
