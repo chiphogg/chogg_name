@@ -168,175 +168,6 @@ good_slope_after <- DegreesPerCenturyWithFilter(d_rss$date, d_rss$connected,
 jump <- max(diff(d_rss$disconnected))
 ```
 
-- Stuff to cover in the intro...
-  - "No warming for 18 years!" claims.
-
-Lately, various scientists have argued that the "pause" was an illusion.
-They've used a variety of techniques (TODO: list the main ones).
-
-As a layperson, I find these esoteric corrections hard to evaluate.
-So let's put them aside for this post, and ask a simpler question.
-
-*From a "pure" data analysis perspective, did even the most "pause-friendly" dataset ever show a pause in the first place?*
-
-The answer is a surprisingly firm "no".
-
-This seems absurd: *if* it didn't, then *why* did people think global warming had stopped in the first place?
-We will see that this claim was based on a data analysis error -- a subtle one, but easily understood (and, ultimately, inarguable).
-
-## The Data: RSS
-
-To begin, here are the data.
-
-```{r bare_rss, echo=FALSE}
-p <- (ggplot(data=d_rss, aes(x=date))
-      + geom_line(colour='#888888', aes(y=anomaly))
-      + ggtitle('RSS Satellite Temperature Record')
-      + scale_x_date('Date')
-      + scale_y_continuous('Temperature Anomaly (K)')
-      )
-print(p)
-```
-
-There's a lot of fluctuation here, due to ((give reasons.  Natural variability?  Volcanoes?  El Nino?)).
-It looks like the later data are probably higher than the earlier data, but it's hard to be sure.
-
-To figure out what's going on "underneath" these fluctuations, we need to treat them as noise and look for a buried signal.
-
-We need *models*.
-
-## The simplest model: one trendline
-
-One approach is to compute the line of best fit.
-Basically, we're *assuming* the trend has been constant over time, and asking which trend best describes that data.
-
-```{r single_trendline, echo=FALSE}
-colour_single <- 'purple'
-column_single <- 'single'
-line_single <- FitLine(d=d_rss, column=column_single, colour=colour_single)
-label_single <- TextLabel(PrintTrend(single_trendline_slope), d_rss, 'single',
-                          colour=colour_single)
-print(p
-      + line_single
-      + label_single
-      + ggtitle('RSS fit: single trendline')
-      )
-```
-
-Overall, the RSS data show a slope of `r PrintTrend(single_trendline_slope)`.
-
-This is an exceedingly simple model -- and that is its strength!
-More complicated models risk mistaking noise for signal.
-This phenomenon is called "overfitting", and we want to avoid it.
-
-However, we also need to be avoid using a model that's *too* simple.
-
-## The next model: the trend changes
-
-Suppose the underlying trend *changes*.
-Our model will still give an answer, but it will be wrong.
-We need a more sophisticated model to check whether the trend has changed.
-
-(Note that it is very important to be able to detect trendline changes.
-After all, changing the trend is *exactly what environmentalists are trying to do!*)
-
-In particular, [Lord Monckton suspects](http://www.climatedepot.com/2015/11/04/no-global-warming-at-all-for-18-years-9-months-a-new-record-the-pause-lengthens-again-just-in-time-for-un-summit-in-paris/) that the trend has completely flattened (i.e., global warming has stopped).
-He looks for the longest stretch of time which yields a flat trend up to the present day.
-By the same method we used above, he obtains a shockingly long answer: he finds *no global warming for 18 years!*
-
-```{r partial_disconnected, echo=FALSE}
-colour_disc <- 'blue'
-column_disc <- 'disconnected'
-line_disc <- FitLine(d=d_rss, column=column_disc, colour=colour_disc)
-label_disc <- TextLabel(PrintTrend(bad_slope_after), d_rss, column_disc,
-                        colour=colour_disc)
-p_disconnected <- (p
-                   + line_disc
-                   + label_disc
-                   + ggtitle('RSS fit (latest 18 years only):\n"No" Global Warming!')
-                   )
-print(p_disconnected + coord_cartesian(xlim=c(cutoff_date + 30, max(d_rss$date))))
-```
-
-
-Actually, it's not *exactly* the same method; he has excluded the earlier dates.
-When we add them back in, we find a fatal flaw in his approach.
-
-```{r full_disconnected, echo=FALSE}
-i_jump <- BiggestJumpIndex(d_rss$disconnected)
-column_jump <- column_disc
-colour_jump <- 'red'
-print(p_disconnected
-      + ggtitle('Fitting the old data too:\nInstantaneous temperature jump')
-      + TextLabel(PrintTrend(bad_slope_before), d_rss[1, ], column_disc,
-                  colour=colour_disc)
-      + FitLine(d=d_rss[i_jump + 0:1, ], column=column_jump,
-                colour=colour_jump)
-      + TextLabel(sprintf('+%s!', PrintTemp(jump)), d_rss[i_jump, ],
-                  column_jump, colour=colour_jump)
-      )
-```
-
-
-We do see that the slope has changed (from `r PrintTemp(bad_slope_before)` to `r PrintTrend(bad_slope_after)`).
-But we see something else: the temperature *instantaneously jumps* by `r PrintTemp(jump)` at the transition!
-
-## Fixing the model: trendlines done *right*
-
-Everybody agrees that the *real* temperature trend doesn't have any "jumps".
-So why not bake this assumption into the model?
-
-```{r connected, echo=FALSE}
-colour_conn <- 'red'
-column_conn <- 'connected'
-line_conn <- FitLine(d=d_rss, column=column_conn, colour=colour_conn)
-label_conn_before <- TextLabel(PrintTrend(good_slope_before),
-                               d_rss[nrow(d_rss)*0.15, ], column_conn,
-                               colour=colour_conn)
-label_conn_after <- TextLabel(PrintTrend(good_slope_after),
-                              d_rss[nrow(d_rss)*0.65, ], column_conn,
-                              colour=colour_conn)
-
-p_connected <- (p
-                + line_conn
-                + label_conn_before
-                + label_conn_after
-                + ggtitle('"Changing trendlines" model:\nthe correct (i.e., connected) version')
-                )
-print(p_connected)
-```
-
-The *improved* model still allows the trend to change; it just makes sure to *connect the trendlines*.
-We see that the warming is alive and well: `r PrintTrend(good_slope_after)`.
-This is somewhat smaller than the average slope from the simplest model (`r PrintTrend(single_trendline_slope)`)
-
-However, it's actually *bigger* than the biggest slope from the disconnected model (`r PrintTrend(bad_slope_before)`)!
-This is another effect of the disconnected model squeezing all the warming into a single instant.
-It underestimates the warming *before* as well as after.
-
-## Let's plot all the models together
-
-```{r all_models, echo=FALSE}
-print(p
-      + line_single
-      + line_disc
-      + line_conn
-      + ggtitle('All models together')
-      )
-```
-
-Overall, the "connected trendline" model looks really similar to the single-trendline model.
-
-By contrast, the disconnected trendline model looks downright bizarre.
-Of course, it doesn't need the other models to make it look weird!
-All it needed was for the implicit "jump" to be exposed: anyone can see at a glance that it's wrong.
-
-## What's the longest pause with the *fixed* model?
-
-We can play the same game as Lord Monckton, but using the better model.
-How far back can we go and find a zero-slope trendline *which connects to the previous trendline*?
-
-
 ```{r pause_hunting, include=FALSE, cache=TRUE}
 last_date <- tail(d_rss$date, 1)
 seen_negative_slope <- FALSE
@@ -378,8 +209,173 @@ PrintMonthsSpanInYears <- function(from, to) {
 }
 ```
 
+The global warming "pause" means different things to different people.
+
+- Have the climate models overestimated the recent warming?
+- Has global warming slowed down?
+- Has global warming *stopped*?
+
+All these questions are interesting and important, but this post will focus only on the last one.
+
+Climate skeptic [Christopher Monckton claims](http://www.climatedepot.com/2015/11/04/no-global-warming-at-all-for-18-years-9-months-a-new-record-the-pause-lengthens-again-just-in-time-for-un-summit-in-paris/) that global warming stopped more than 18 years ago.
+He bases this claim on a satellite temperature dataset from the Remote Sensing Systems company ("RSS" for short).
+Scientists have responded in various ways.
+One explanation is that lately, more heat has been going into the ocean instead of the atmosphere.
+Another is that other, land-based datasets (which do not show such an extended pause) more accurately reflect reality.
+
+These sophisticated responses can be hard to evaluate without expert domain knowledge.
+Here, I'll take a different approach: I'll look directly at the RSS data, taking them at face value for this post.
+
+It turns out that the model that gives "no global warming for 18 years" is broken, and hides a very amusing implication which I want to highlight.
+To get the 18 warming-free years, it implicitly *crams 18 years' worth of warming into a single instantaneous jump*.
+
+Happily, it is very easy to fix the model.
+When we do, we find an apparent pause of `r PrintMonthsSpanInYears(pause_date, last_date)`.
+This is short enough to be explained by natural variability, which means that any talk of a "global warming stopped" pause is at best premature.
+
+But let's begin by looking at the raw data themselves.
+
+## The raw RSS data
+
+```{r bare_rss, echo=FALSE}
+p <- (ggplot(data=d_rss, aes(x=date))
+      + geom_line(colour='#888888', aes(y=anomaly))
+      + ggtitle('RSS Satellite Temperature Record')
+      + scale_x_date('Date')
+      + scale_y_continuous('Temperature Anomaly (K)')
+      )
+print(p)
+```
+
+This data fluctuates -- a *lot*.
+These fluctuations are actual physical events, but for our purposes they're just noise: we're looking for underlying *trends* in the data.
+
+Not much is clear at first glance.
+Maybe the later temperatures are overall higher than the earlier data?
+It's hard to be sure by eyeball: what we need is a *model*.
+
+## The simplest model: one trendline
+
+One approach is to compute the line of best fit.
+Basically, we're *assuming* the trend has been constant over time, and asking which trend best describes that data.
+
+```{r single_trendline, echo=FALSE}
+colour_single <- 'purple'
+column_single <- 'single'
+line_single <- FitLine(d=d_rss, column=column_single, colour=colour_single)
+label_single <- TextLabel(PrintTrend(single_trendline_slope), d_rss, 'single',
+                          colour=colour_single)
+print(p
+      + line_single
+      + label_single
+      + ggtitle('RSS fit: single trendline')
+      )
+```
+
+We get a slope of `r PrintTrend(single_trendline_slope)`.
+
+This method is known as "[linear least squares](https://en.wikipedia.org/wiki/Linear_least_squares_(mathematics))".
+It is exceedingly simple -- and that is its strength!
+More complicated models risk mistaking noise for signal.
+This phenomenon is called "overfitting", and we want to avoid it.
+
+Of course, the downside to a simple model is that it may be *too* simple to capture important changes.
+
+## The next model: let the trend change
+
+Suppose the underlying trend *changes*.
+Our model will still give an answer, but it will be wrong.
+We need a more sophisticated model to check whether the trend has changed.
+
+(Note that it is very important to be able to detect trendline changes.
+After all, changing the trend is *exactly what environmentalists are trying to do!*)
+
+In particular, Lord Monckton suspects that the trend has completely flattened (i.e., global warming has stopped).
+He looks for the longest stretch of time which yields a flat trend up to the present day, by the same method we used above (linear least squares).
+His answer is shockingly long: *no global warming for 18 years*!
+
+```{r partial_disconnected, echo=FALSE}
+colour_disc <- 'blue'
+column_disc <- 'disconnected'
+line_disc <- FitLine(d=d_rss, column=column_disc, colour=colour_disc)
+label_disc <- TextLabel(PrintTrend(bad_slope_after), d_rss, column_disc,
+                        colour=colour_disc)
+p_disconnected <- (p
+                   + line_disc
+                   + label_disc
+                   + ggtitle('RSS fit (latest 18 years only):\n"No" Global Warming!')
+                   )
+print(p_disconnected + coord_cartesian(xlim=c(cutoff_date + 30, max(d_rss$date))))
+```
+
+
+Actually, it's not *exactly* the same method; he has excluded the earlier dates.
+When we add them back in, we reveal a fatal flaw in his approach.
+
+```{r full_disconnected, echo=FALSE}
+i_jump <- BiggestJumpIndex(d_rss$disconnected)
+column_jump <- column_disc
+colour_jump <- 'red'
+print(p_disconnected
+      + ggtitle('Including all the data:\nInstantaneous temperature jump')
+      + TextLabel(PrintTrend(bad_slope_before), d_rss[1, ], column_disc,
+                  colour=colour_disc)
+      + FitLine(d=d_rss[i_jump + 0:1, ], column=column_jump,
+                colour=colour_jump)
+      + TextLabel(sprintf('+%s!', PrintTemp(jump)), d_rss[i_jump, ],
+                  column_jump, colour=colour_jump)
+      )
+```
+
+
+We do see that the slope has changed (from `r PrintTemp(bad_slope_before)` to `r PrintTrend(bad_slope_after)`).
+But we also see something else: the temperature *instantaneously jumps*[^escalator] by `r PrintTemp(jump)` at the transition!
+This is not a small jump, either: it is equivalent to `r round(YearsOfWarming(jump, single_trendline_slope))` years' worth of warming at the single-trendline rate of `r PrintTrend(single_trendline_slope)`.
+
+So the 18-year "pause" really hides 18 years of warming in a single instant.
+
+[^escalator]: This absurd temperature jump is implicit in other analyses (such as the excellent [escalator animation](http://www.skepticalscience.com/graphics.php?g=47)), but in this post I wanted to highlight it explicitly.
+
+## Fixing the model: trendlines done *right*
+
+Everybody agrees that the *real* temperature trend doesn't have any "jumps".
+So why not bake this assumption into the model?
+
+```{r connected, echo=FALSE}
+colour_conn <- 'red'
+column_conn <- 'connected'
+line_conn <- FitLine(d=d_rss, column=column_conn, colour=colour_conn)
+label_conn_before <- TextLabel(PrintTrend(good_slope_before),
+                               d_rss[nrow(d_rss)*0.15, ], column_conn,
+                               colour=colour_conn)
+label_conn_after <- TextLabel(PrintTrend(good_slope_after),
+                              d_rss[nrow(d_rss)*0.65, ], column_conn,
+                              colour=colour_conn)
+
+p_connected <- (p
+                + line_conn
+                + label_conn_before
+                + label_conn_after
+                + ggtitle('"Changing trendlines" model:\nthe correct (i.e., connected) version')
+                )
+print(p_connected)
+```
+
+The *improved* model still allows the trend to change; it just makes sure to *connect the trendlines*.
+We see that the warming is alive and well: `r PrintTrend(good_slope_after)`.
+
+This is somewhat smaller than the average slope from the simplest model (`r PrintTrend(single_trendline_slope)`)
+However, it's actually *bigger* than the biggest slope from the disconnected model (`r PrintTrend(bad_slope_before)`)!
+This is another effect of squeezing all the warming into a single instant.
+The model underestimates the warming *before* as well as after.
+
+## What's the longest pause with the *fixed* model?
+
+We can play the same game as Lord Monckton, but using the fixed version of his model.
+How far back can we go and find a zero-slope trendline *which connects to the previous trendline*?
+
 ```{r connected_pause, echo=FALSE}
-colour_newpause <- 'orange'
+colour_newpause <- '#884400'
 column_newpause <- 'newpause'
 line_newpause <- FitLine(d=d_rss, column=column_newpause,
                          colour=colour_newpause)
@@ -398,27 +394,24 @@ print(p
       )
 ```
 
-This corrected "pause" extends back to
-`r format(pause_date + 30, '%B %Y')`, a span of
-`r PrintMonthsSpanInYears(pause_date, last_date)`.
+```{r all_models, echo=FALSE}
+p_all <- (p
+          + line_single
+          + line_disc
+          + line_conn
+          + line_newpause
+          + ggtitle('All models together')
+          )
+# Don't print this plot; I can't figure out how to fit it into the narrative without rambling even more.
+```
 
-## Other questions worth investigating
+The answer: `r PrintMonthsSpanInYears(pause_date, last_date)`.
+This is not completely negligible, but it's a lot shorter than `r PrintMonthsSpanInYears(cutoff_date, last_date)`!
 
-Here are some related questions which I haven't evaluated:
+In particular, it's now well within the range of what natural variability can explain.
+Judith Curry (a climate scientist with climate-skeptic leanings) [gives 17 years](http://judithcurry.com/2015/11/06/hiatus-controversy-show-me-the-data/) as a threshold to rule out explanations based on natural variability.
+Since fixing the model has "rewound the pause", we are now well within that threshold.
+It looks like we'll need to wait at least `r 17 - MonthsSpan(pause_date, last_date) %/% 12` years before we can claim that global warming has stopped.
 
-- Has the rate of global warming *slowed?*
-- Have the IPCC climate models overestimated the recent global warming?
-
-These questions are interesting, important, and well worth pursuing!
-But this blog post is tightly focused on one question only:
-
-## Did global warming **stop** for 18 years?
-
-No. 
-
-The RSS satellite record unambiguously shows global warming, including to the present day.
-As I've shown, the idea that we had "no warming for 18 years" actually implies that 18 years' worth of warming happened instantaneously.
-
-Squeeze the warming one place (the slope), and it pops up somewhere else (the "jump").
-
-If anyone wants to find an *actual* pause, they will have to use connected trendlines.
+Of course, that's only if the data continue to "cooperate"!
+With 2015 [shaping up to be a real scorcher](https://www.washingtonpost.com/news/capital-weather-gang/wp/2015/10/21/after-record-shattering-september-2015-in-commanding-lead-for-earths-hottest-year-on-record/), I doubt we'll *ever* see a *true* pause of this kind materialize.
