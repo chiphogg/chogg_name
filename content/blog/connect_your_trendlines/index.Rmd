@@ -38,7 +38,7 @@ DisconnectedLinearMatrix <- function(x, x_break) {
 ConnectedLinearMatrix <- function(x, x_break) {
   functions <- list(function(z) 1,
                     function(z) z,
-                    function(z) (z - x_break) * (z > x_break))
+                    function(z) as.numeric(z - x_break) * (z > x_break))
   LinearLeastSquaresMatrix(x, functions)
 }
 
