@@ -226,10 +226,10 @@ Another is that other, land-based datasets (which do not show such an extended p
 These sophisticated responses can be hard to evaluate without expert domain knowledge.
 Here, I'll take a different approach: I'll look directly at the RSS data, taking them at face value for this post.
 
-It turns out that the model that gives "no global warming for 18 years" is broken, and hides a very amusing implication which I want to highlight.
-To get the 18 warming-free years, it implicitly *crams 18 years' worth of warming into a single instantaneous jump*.
+It turns out that these data do *not* show an 18-year pause.
+The model that says they do is broken: to get the 18 warming-free years, it implicitly *crams 18 years' worth of warming into a single instantaneous jump*.
 
-Happily, it is very easy to fix the model.
+Fortunately, the model is easy to fix.
 When we do, we find an apparent pause of `r PrintMonthsSpanInYears(pause_date, last_date)`.
 This is short enough to be explained by natural variability, which means that any talk of a "global warming stopped" pause is at best premature.
 
@@ -247,17 +247,19 @@ p <- (ggplot(data=d_rss, aes(x=date))
 print(p)
 ```
 
-This data fluctuates -- a *lot*.
-These fluctuations are actual physical events, but for our purposes they're just noise: we're looking for underlying *trends* in the data.
+These data fluctuate -- a *lot*.
+The fluctuations represent actual physical events, but for our purposes they're just noise: we're looking for underlying *trends* in the data.
 
 Not much is clear at first glance.
 Maybe the later temperatures are overall higher than the earlier data?
 It's hard to be sure by eyeball: what we need is a *model*.
 
+We'll try out different models in this post, using the standard [linear least squares](https://en.wikipedia.org/wiki/Linear_least_squares_(mathematics)) technique to find the best fit in each case.
+
 ## The simplest model: one trendline
 
-One approach is to compute the line of best fit.
-Basically, we're *assuming* the trend has been constant over time, and asking which trend best describes that data.
+One approach is to assume that a single, constant trend can describe the data.
+That trend is the *slope* of the line of best fit: here, we find `r PrintTrend(single_trendline_slope)`.
 
 ```{r single_trendline, echo=FALSE}
 colour_single <- 'purple'
@@ -272,10 +274,7 @@ print(p
       )
 ```
 
-We get a slope of `r PrintTrend(single_trendline_slope)`.
-
-This method is known as "[linear least squares](https://en.wikipedia.org/wiki/Linear_least_squares_(mathematics))".
-It is exceedingly simple -- and that is its strength!
+This model is exceedingly simple -- and that is its strength!
 More complicated models risk mistaking noise for signal.
 This phenomenon is called "overfitting", and we want to avoid it.
 
@@ -310,7 +309,7 @@ print(p_disconnected + coord_cartesian(xlim=c(cutoff_date + 30, max(d_rss$date))
 
 
 Actually, it's not *exactly* the same method; he has excluded the earlier dates.
-When we add them back in, we reveal a fatal flaw in his approach.
+When we add them back in, we discover a flaw in this model.
 
 ```{r full_disconnected, echo=FALSE}
 i_jump <- BiggestJumpIndex(d_rss$disconnected)
@@ -334,7 +333,7 @@ This is not a small jump, either: it is equivalent to `r round(YearsOfWarming(ju
 
 So the 18-year "pause" really hides 18 years of warming in a single instant.
 
-[^escalator]: This absurd temperature jump is implicit in other analyses (such as the excellent [escalator animation](http://www.skepticalscience.com/graphics.php?g=47)), but in this post I wanted to highlight it explicitly.
+[^escalator]: This unphysical temperature jump is implicit in other analyses (such as the [escalator animation](http://www.skepticalscience.com/graphics.php?g=47)), but in this post I wanted to highlight it explicitly.
 
 ## Fixing the model: trendlines done *right*
 
@@ -389,7 +388,7 @@ print(p
       + line_newpause
       + label_newpause_before
       + label_newpause_after
-      + ggtitle(sprintf("The longest 'pause' with a sensible model:\n%s",
+      + ggtitle(sprintf("The longest 'pause' with a credible model:\n%s",
                         PrintMonthsSpanInYears(pause_date, last_date)))
       )
 ```
@@ -406,12 +405,12 @@ p_all <- (p
 ```
 
 The answer: `r PrintMonthsSpanInYears(pause_date, last_date)`.
-This is not completely negligible, but it's a lot shorter than `r PrintMonthsSpanInYears(cutoff_date, last_date)`!
+This is not completely negligible, but it's a lot shorter than `r PrintMonthsSpanInYears(cutoff_date, last_date)`.
 
 In particular, it's now well within the range of what natural variability can explain.
 Judith Curry (a climate scientist with climate-skeptic leanings) [gives 17 years](http://judithcurry.com/2015/11/06/hiatus-controversy-show-me-the-data/) as a threshold to rule out explanations based on natural variability.
 Since fixing the model has "rewound the pause", we are now well within that threshold.
 It looks like we'll need to wait at least `r 17 - MonthsSpan(pause_date, last_date) %/% 12` years before we can claim that global warming has stopped.
 
-Of course, that's only if the data continue to "cooperate"!
-With 2015 [shaping up to be a real scorcher](https://www.washingtonpost.com/news/capital-weather-gang/wp/2015/10/21/after-record-shattering-september-2015-in-commanding-lead-for-earths-hottest-year-on-record/), I doubt we'll *ever* see a *true* pause of this kind materialize.
+Of course, that's only if the data continue to "cooperate".
+With 2015 [shaping up to be a real scorcher](https://www.washingtonpost.com/news/capital-weather-gang/wp/2015/10/21/after-record-shattering-september-2015-in-commanding-lead-for-earths-hottest-year-on-record/), I doubt we'll ever see a true pause (of this kind) materialize!
