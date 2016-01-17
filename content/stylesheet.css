@@ -106,8 +106,8 @@ pre, code, code span, kbd, var {
   font-family: Consolas, Inconsolata, Monaco, monospace;
 }
 code {
-  border-radius: 0.5em;
-  background: #aaaaaa;
+  border-radius: 0.25em;
+  background: #ddd;
   padding: 0.25em;
 }
 
