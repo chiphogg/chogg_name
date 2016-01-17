@@ -1,0 +1,69 @@
+When we share code, it should be as readable as possible, i.e.:
+
+- Syntax highlighted.
+- Using a monospaced font.
+
+It should also be *frictionless*: fiddling with tools detracts from the flow state.
+
+Vim makes it easy to export part or all of your buffer, *including syntax highlighting*.
+The `:TOhtml` command generates an HTML version of your buffer's contents.
+You can copy it from a browser tab, and paste it into any HTML-aware editor (such as a Gmail message, a Google Doc, or a Google Groups post).
+The syntax highlighting comes along for the ride!
+
+Vim makes this easy... but not easy *enough*.
+
+- You need to save the HTML file and open it in a browser.
+- You need to select the text from the browser tab and copy it.
+- You also need to delete the HTML file when you're done, so you don't litter your directories!
+
+## Enter [syncopate](https://github.com/google/vim-syncopate#syncopate).
+
+[`syncopate`](https://github.com/google/vim-syncopate#syncopate) stands for **syn**tax **co**py-**pa**s**te**.
+It's all the convenience of `:TOhtml`, but none of the friction.
+
+First, select some code (or don't, if you want the whole buffer).
+Then call the `:SyncopateExportToClipboard` command.
+Syncopate will:
+
+1. Change to the default colorscheme (which tends to look better on white backgrounds).
+2. Populate the clipboard with the (*syntax-highlighted!*) contents of your buffer.
+3. Restore your colorscheme settings.
+
+It gets even *more* frictionless if you [enable mappings](https://github.com/google/vim-syncopate#use-the-clipboard-directly).
+Let's say your [&lt;Leader&gt;](http://stackoverflow.com/questions/1764263/what-is-the-leader-in-a-vimrc-file) is `,`.
+Then `,<>` (mnemonic: think of HTML tags) will export the entire file.
+
+Better yet, `syncopate` works with vim's [text objects](http://blog.carbonfive.com/2011/10/17/vim-text-objects-the-definitive-guide/) to make it a breeze to grab just the area you want.
+That's right: `,<ip` exports the current paragraph!
+
+## Easy to configure
+
+There are two main ways to [configure `syncopate`](https://github.com/google/vim-syncopate#how-do-i-configure-it).
+
+### Generic `:TOhtml` options
+
+See [:help :TOhtml](http://vimdoc.sourceforge.net/htmldoc/syntax.html#:TOhtml) and just start scrolling; the options (e.g., `g:html_no_progress`) are listed below.
+
+### syncopate-specific
+
+Syncopate is a maktaba plugin, so it's easy to [configure it with Glaive](https://github.com/google/vim-glaive).
+
+`:help syncopate-configure` gives a list of all the options.
+Here are a few examples.
+
+- `change_colorscheme`:  Set this to false to keep your current colorscheme, and export *exactly* what you see.  (This is true by default because the default colorscheme works better on the white-ish backgrounds one commonly encounters in practice.)
+- `clear_bg`:  Setting this will output a *transparent* background.  Useful when your colorscheme almost-but-not-quite matches the background of your slides -- or especially if those slides have a color gradient!
+
+So if you wanted to export your current colorscheme, except with a transparent background, you might use a line like this:
+
+```vim
+Glaive syncopate !change_colorscheme clear_bg
+```
+
+This works in your `.vimrc`, or -- with tab-completion! -- on the fly in a live vim session.
+
+## So, what's missing?
+
+Mac and Windows support.
+
+[Contributions welcome](https://github.com/google/vim-syncopate/blob/master/CONTRIBUTING.md)!
