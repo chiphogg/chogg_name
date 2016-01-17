@@ -304,7 +304,9 @@ p_disconnected <- (p
                    + label_disc
                    + ggtitle('RSS fit (latest 18 years only):\n"No" Global Warming!')
                    )
-print(p_disconnected + coord_cartesian(xlim=c(cutoff_date + 30, max(d_rss$date))))
+print(p_disconnected
+      + coord_cartesian(xlim=c(cutoff_date, max(d_rss$date)), expand=FALSE)
+      )
 ```
 
 
