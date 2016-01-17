@@ -92,7 +92,7 @@ end
 route '/assets/third_party/*/' do
   extension_list = item[:extension].split('.')
   extension = extension_list[extension_list.length - 1]
-  trimmed_path = (item.identifier.split('/') - ['third_party'])
+  trimmed_path = (item.identifier.to_str.split('/') - ['third_party'])
   i = trimmed_path.length - 1
   trimmed_path[i] = trimmed_path[i].sub(%r{-[.\d]*(\.min)?$}, '')
   trimmed_path.join('/') + '.' + extension
