@@ -1,2 +1,8 @@
 output
 tmp
+.RData
+.Rhistory
+.tags
+cache
+crash.log
+knitr_output*.txt
