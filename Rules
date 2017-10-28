@@ -114,4 +114,4 @@ route '*' do
   end
 end
 
-layout '*', :haml, :ugly => true
+layout '*', :haml
