@@ -1,0 +1,8 @@
+title: Compile-time combinatorics
+kind: article
+created_at: 2017-12-05 20:18
+tldr: Writing poker software gave me an excuse to try out template
+  metaprogramming.  Figuring out how to actually <b>use</b> the results was a
+  fun challenge, so I'm posting my strategy here for anyone else who might find
+  it useful.
+short_url: n_choose_k
