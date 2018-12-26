@@ -163,8 +163,8 @@ cat(X(1:10))
 
 These numbers exactly match the ones he provided me.  Success!
 
-[Fibonacci sequence]: http://en.wikipedia.org/wiki/Fibonacci_number
+[Fibonacci sequence]: https://en.wikipedia.org/wiki/Fibonacci_number
 [exponential functions]: http://www.animations.physics.unsw.edu.au/jw/calculus.htm#exp
-[golden ratio]: http://www.mathsisfun.com/numbers/golden-ratio.html
-[R]: http://www.r-project.org/
+[golden ratio]: https://www.mathsisfun.com/numbers/golden-ratio.html
+[R]: https://www.r-project.org/
 [Binet's formula]: http://mathworld.wolfram.com/BinetsFibonacciNumberFormula.html

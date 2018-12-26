@@ -30,10 +30,10 @@ Syncopate will:
 3. Restore your colorscheme settings.
 
 It gets even *more* frictionless if you [enable mappings](https://github.com/google/vim-syncopate#use-the-clipboard-directly).
-Let's say your [&lt;Leader&gt;](http://stackoverflow.com/questions/1764263/what-is-the-leader-in-a-vimrc-file) is `,`.
+Let's say your [&lt;Leader&gt;](https://stackoverflow.com/questions/1764263/what-is-the-leader-in-a-vimrc-file) is `,`.
 Then `,<>` (mnemonic: think of HTML tags) will export the entire file.
 
-Better yet, `syncopate` works with vim's [text objects](http://blog.carbonfive.com/2011/10/17/vim-text-objects-the-definitive-guide/) to make it a breeze to grab just the area you want.
+Better yet, `syncopate` works with vim's [text objects](https://blog.carbonfive.com/2011/10/17/vim-text-objects-the-definitive-guide/) to make it a breeze to grab just the area you want.
 That's right: `,<ip` exports the current paragraph!
 
 ## Easy to configure

@@ -217,7 +217,7 @@ The global warming "pause" means different things to different people.
 
 All these questions are interesting and important, but this post will focus only on the last one.
 
-Climate skeptic [Christopher Monckton claims](http://www.climatedepot.com/2015/11/04/no-global-warming-at-all-for-18-years-9-months-a-new-record-the-pause-lengthens-again-just-in-time-for-un-summit-in-paris/) that global warming stopped more than 18 years ago.
+Climate skeptic [Christopher Monckton claims](https://www.climatedepot.com/2015/11/04/no-global-warming-at-all-for-18-years-9-months-a-new-record-the-pause-lengthens-again-just-in-time-for-un-summit-in-paris/) that global warming stopped more than 18 years ago.
 He bases this claim on a satellite temperature dataset from the Remote Sensing Systems company ("RSS" for short).
 Scientists have responded in various ways.
 One explanation is that lately, more heat has been going into the ocean instead of the atmosphere.
@@ -335,7 +335,7 @@ This is not a small jump, either: it is equivalent to `r round(YearsOfWarming(ju
 
 So the 18-year "pause" really hides 18 years of warming in a single instant.
 
-[^escalator]: This unphysical temperature jump is implicit in other analyses (such as the [escalator animation](http://www.skepticalscience.com/graphics.php?g=47)), but in this post I wanted to highlight it explicitly.
+[^escalator]: This unphysical temperature jump is implicit in other analyses (such as the [escalator animation](https://www.skepticalscience.com/graphics.php?g=47)), but in this post I wanted to highlight it explicitly.
 
 ## Fixing the model: trendlines done *right*
 
@@ -410,7 +410,7 @@ The answer: `r PrintMonthsSpanInYears(pause_date, last_date)`.
 This is not completely negligible, but it's a lot shorter than `r PrintMonthsSpanInYears(cutoff_date, last_date)`.
 
 In particular, it's now well within the range of what natural variability can explain.
-Judith Curry (a climate scientist with climate-skeptic leanings) [gives 17 years](http://judithcurry.com/2015/11/06/hiatus-controversy-show-me-the-data/) as a threshold to rule out explanations based on natural variability.
+Judith Curry (a climate scientist with climate-skeptic leanings) [gives 17 years](https://judithcurry.com/2015/11/06/hiatus-controversy-show-me-the-data/) as a threshold to rule out explanations based on natural variability.
 Since fixing the model has "rewound the pause", we are now well within that threshold.
 It looks like we'll need to wait at least `r 17 - MonthsSpan(pause_date, last_date) %/% 12` years before we can claim that global warming has stopped.
 

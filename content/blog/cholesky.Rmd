@@ -1,4 +1,4 @@
-The [Cholesky decomposition](http://en.wikipedia.org/wiki/Cholesky_decomposition) is a key concept in matrix algebra.
+The [Cholesky decomposition](https://en.wikipedia.org/wiki/Cholesky_decomposition) is a key concept in matrix algebra.
 It's a kind of "matrix square root": a lower-triangular matrix $L$ which gives back the original matrix $K$ when multiplied with its transpose:
 $$L L^\intercal = K.$$
 
@@ -134,7 +134,7 @@ This works pretty well, until [it doesn't](https://github.com/jstat/jstat/blob/b
 Another approach would be to start with $L_{n - 1}$, and use what we just figured out to add the final row.
 Of course, then we'd _need_ $L_{n - 1}$, but we could get it from $L_{n - 2}$... 
 
-At this point, I'm reminded of [mathematical induction](http://en.wikipedia.org/wiki/Mathematical_induction): a method to generate "valid for any positive integer" proofs based on two ingredients.
+At this point, I'm reminded of [mathematical induction](https://en.wikipedia.org/wiki/Mathematical_induction): a method to generate "valid for any positive integer" proofs based on two ingredients.
 One ingredient is a method for getting from step $n$ to step $(n + 1)$ for any $n$; we have that already.
 The other ingredient is a _base case_: an answer for the smallest possible $n$ which _doesn't_ depend on any earlier stages.
 
@@ -239,5 +239,5 @@ They often contain extremely simple ideas.
 [hard to pronounce]: https://biostat-lists.wustl.edu/sympa/arc/s-news/2000-10/msg00172.html
 
 [^block]:
-  Note that this is a [block matrix](http://en.wikipedia.org/wiki/Block_matrix): one whose elements stand for other matrices.
+  Note that this is a [block matrix](https://en.wikipedia.org/wiki/Block_matrix): one whose elements stand for other matrices.
   Specifically, $K_n$ is an $(n \times n)$ matrix; $k_n$ is $(n \times 1)$ (i.e., a vector), and $\sigma_{n + 1}^2$ is $(1 \times 1)$ (i.e., a scalar).

@@ -42,13 +42,13 @@ In other words: a thing which gets some input text, modifies it, and outputs the
 
 The [knitr filter](https://github.com/chiphogg/chogg_name/blob/3f8e2e1851bdf90282a9414b6843195fe7dd08a7/lib/default.rb#L15-L25) has one simple job: run the snippets of R code it finds, and stick the results in the text.
 It doesn't need to worry about other manipulations, since filters can be chained: the output of one is the input of the next.
-For instance, I use a [pandoc](http://johnmacfarlane.net/pandoc/) filter to turn the output of knitr into HTML for my website.
+For instance, I use a [pandoc](https://pandoc.net) filter to turn the output of knitr into HTML for my website.
 
 ### Don't be scared by git's lousy image handling
 
 I procrastinated for more than a year between writing that knitr filter and adding support for figures.
 The bogeyman was git's awful reputation for handling image files.
-Over the years, people have developed [a confusing array of not-quite-satisfactory workarounds](http://stackoverflow.com/questions/540535/managing-large-binary-files-with-git).
+Over the years, people have developed [a confusing array of not-quite-satisfactory workarounds](https://stackoverflow.com/questions/540535/managing-large-binary-files-with-git).
 I didn't want to go through the hassle of comparing them and committing to one.
 
 Happily, git's handling of images turns out to be a complete non-issue, since _the images never end up in git_.[^1]
@@ -105,18 +105,18 @@ print(ggplot(data=d, aes(x=x, y=y))
 ## Join the fun!
 
 I am far from the first to advocate and implement reproducible research in blogging.
-For example, [Carl Boettiger](http://www.carlboettiger.info/) has maintained an [open lab notebook](http://www.carlboettiger.info/2012/09/28/Welcome-to-my-lab-notebook.html) for years, and I'm sure there are many other examples which I haven't yet seen.
+For example, [Carl Boettiger](https://www.carlboettiger.info/) has maintained an [open lab notebook](https://www.carlboettiger.info/2012/09/28/Welcome-to-my-lab-notebook.html) for years, and I'm sure there are many other examples which I haven't yet seen.
 
 But I don't want it to be merely possible; I want it to be _commonplace_.
 I want it to be _standard_.
 I want a world where it's so easy to do it right, people are suspicious of bloggers who don't.
 Sharing my implementation (and the tricks I learned along the way) is my modest contribution to making that world a reality.
 
-[markdown]: http://en.wikipedia.org/wiki/Markdown
-[LaTeX]: http://www.latex-project.org/
-[R]: http://www.r-project.org/
-[knitr]: http://yihui.name/knitr/
-[nanoc]: http://nanoc.ws/
+[markdown]: https://en.wikipedia.org/wiki/Markdown
+[LaTeX]: https://www.latex-project.org/
+[R]: https://www.r-project.org/
+[knitr]: https://yihui.name/knitr/
+[nanoc]: https://nanoc.ws/
 
 [^1]: Technically, since I'm using github pages to host my website, the images _do_ end up in a git repository; just not the _source_ repository.
       If the images ever become a problem, I can just rebase and squash all the commits.

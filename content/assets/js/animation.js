@@ -1,21 +1,21 @@
 // Utility functions for animated plots.
 
-// Thanks to http://stackoverflow.com/a/10284006 for zip() function.
+// Thanks to https://stackoverflow.com/a/10284006 for zip() function.
 function zip(arrays) {
   return arrays[0].map(function(_, i) {
     return arrays.map(function(array) { return array[i]; })
   });
-}
+  }
 
 // Create a covariance matrix with compact support for a given number of equally
 // spaced points.
 function CompactSupportCovarianceMatrix(N) {
   return jStat.create(N, N, function(i, j) {
     var dt = Math.abs(i - j) / N;
-    return (Math.pow(1 - dt, 6)
-            * ((12.8 * dt * dt * dt) + (13.8 * dt * dt) + (6 * dt) + 1));
+    return (Math.pow(1 - dt, 6) *
+            ((12.8 * dt * dt * dt) + (13.8 * dt * dt) + (6 * dt) + 1));
   });
-}
+  }
 
 function DatasetGenerator(x, mu, kFunc, N_t) {
   var return_object = {};
@@ -32,9 +32,8 @@ function DatasetGenerator(x, mu, kFunc, N_t) {
   var K_t = CompactSupportCovarianceMatrix(N_t);
   // Each row of L_t is a vector to multiply different timesteps.
   var L_t = LoopingCholesky(K_t);
-  var random_matrix = jStat.create(N_t, N, function(i, j) {
-    return jStat.normal.sample(0, 1);
-  });
+  var random_matrix = jStat.create(
+      N_t, N, function(i, j) { return jStat.normal.sample(0, 1); });
   // i indicates which vector from L_t to use, and also which row of the random
   // matrix to update.
   var i = N_t - 1;
@@ -64,8 +63,9 @@ function DatasetGenerator(x, mu, kFunc, N_t) {
 
 // Return a chart object.
 function AnimatedChart(dataset_generator, div_id, title, chart_type, options) {
-  chart_type = (typeof chart_type !== 'undefined') ?
-    chart_type : google.visualization.LineChart;
+  chart_type = (typeof chart_type !== 'undefined')
+                   ? chart_type
+                   : google.visualization.LineChart;
   // The generator which generates new datasets.
   var generator = dataset_generator;
   // The number of milliseconds for each frame.
@@ -76,29 +76,28 @@ function AnimatedChart(dataset_generator, div_id, title, chart_type, options) {
   var data = new google.visualization.DataTable();
   data.addColumn('number', 'x');
   data.addColumn('number', 'y');
-  data.addRows(zip([x, generator.NextDataset()]));
+  data.addRows(zip([ x, generator.NextDataset() ]));
 
   // Set chart options.
-  var chart_options = $.extend(
-      {
-        title: title,
-        width: 800,
-        vAxis: {
-          viewWindow: {
-            min: -3.0,
-            max: 3.0,
-          },
-        },
-        animation: {
-          duration: frame_length,
-          easing: 'linear',
-        },
-        height: 500
+  var chart_options = $.extend({
+    title : title,
+    width : 800,
+    vAxis : {
+      viewWindow : {
+        min : -3.0,
+        max : 3.0,
       },
-      options);
+    },
+    animation : {
+      duration : frame_length,
+      easing : 'linear',
+    },
+    height : 500
+  },
+                               options);
 
   var return_object = {
-    animation_id: null,
+    animation_id : null,
   };
 
   return_object.chart = new chart_type(document.getElementById(div_id))
@@ -122,8 +121,7 @@ function AnimatedChart(dataset_generator, div_id, title, chart_type, options) {
       google.visualization.events.removeListener(listener_id);
       listener_id = null;
     }
-  }
-  return_object.start = function() {
+  } return_object.start = function() {
     listener_id = google.visualization.events.addListener(
         return_object.chart, 'animationfinish', return_object.draw);
     return_object.chart.draw(data, chart_options);

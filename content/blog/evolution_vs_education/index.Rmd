@@ -2,7 +2,7 @@ I recently found an interesting graph comparing countries' understanding of evol
 More GDP _should_ mean better education, which _should_ mean more people who understand basic scientific concepts (like evolution).
 That's more or less what the graph shows, but there's a huge outlier.
 
-<blockquote class="twitter-tweet" lang="en"><p>There is a close relationship between GDP and an understanding of the theory of evolution – with one exception. <a href="http://t.co/stD3lBfqd1">pic.twitter.com/stD3lBfqd1</a></p>&mdash; Max Roser (@MaxCRoser) <a href="https://twitter.com/MaxCRoser/status/589845245862477824">April 19, 2015</a></blockquote>
+<blockquote class="twitter-tweet" lang="en"><p>There is a close relationship between GDP and an understanding of the theory of evolution – with one exception. <a href="https://t.co/stD3lBfqd1">pic.twitter.com/stD3lBfqd1</a></p>&mdash; Max Roser (@MaxCRoser) <a href="https://twitter.com/MaxCRoser/status/589845245862477824">April 19, 2015</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 The USA massively bucks the trend: despite boasting the second-highest GDP, we have the second-*lowest* rate of accepting evolution.
@@ -18,13 +18,13 @@ This suspiciously skewed distribution raises a question: has the author _manufac
 The answer is no, for at least two reasons.
 
 First, consider the source.
-The data come from [a 2006 Science paper](http://www.sciencemag.org/content/313/5788/765.summary) which combined a variety of surveys from recent years.
-The 32 European countries come from the [Eurobarometer survey 63.1](http://www.icpsr.umich.edu/icpsrweb/ICPSR/studies/4563).
+The data come from [a 2006 Science paper](https://www.sciencemag.org/content/313/5788/765.summary) which combined a variety of surveys from recent years.
+The 32 European countries come from the [Eurobarometer survey 63.1](https://www.icpsr.umich.edu/icpsrweb/ICPSR/studies/4563).
 The remaining two countries correspond to the nationalities of the authors (two American and one Japanese).
 Thus, it seems more likely that the US and Japan were added to the diverse Eurobarometer data, rather than any countries being omitted.
 
 Second, even if we do include Canada, it doesn't make the US any less of an outlier.
-[Canadian belief in evolution](http://angusreid.org/americans-are-creationists-britons-and-canadians-side-with-evolution/) is significantly higher than in the US (61% vs. 40%), while their [GDP](https://www.cia.gov/library/publications/the-world-factbook/rankorder/2004rank.html) is somewhat lower (\$44,500 vs. \$54,800).
+[Canadian belief in evolution](http://angusreid.org/britons-and-canadians-more-likely-to-endorse-evolution-than-americans/) is significantly higher than in the US (61% vs. 40%), while their [GDP](https://www.cia.gov/library/publications/the-world-factbook/rankorder/2004rank.html) is somewhat lower (\$44,500 vs. \$54,800).
 Canada is well in line with the rest of the data.
 
 ```{r setup, include=FALSE}
@@ -128,7 +128,7 @@ A friend suggested to me that maybe this has nothing to do with evolution in par
 Maybe this evolution score merely reflects lousy education in general.
 An intriguing suggestion!
 
-To find out, I checked the 2010 OECD World Education Rankings, which [The Guardian visualizes nicely here](http://www.theguardian.com/news/datablog/2010/dec/07/world-education-rankings-maths-science-reading).
+To find out, I checked the 2010 OECD World Education Rankings, which [The Guardian visualizes nicely here](https://www.theguardian.com/news/datablog/2010/dec/07/world-education-rankings-maths-science-reading).
 The US indeed scores poorly for Mathematics, but puts up respectable numbers for Reading and Science. 
 The [full dataset](https://docs.google.com/spreadsheet/ccc?key=0AonYZs4MzlZbdEMzTjN5cHY1MmlJOHI3cmZCamRQWEE&hl=en#gid=1) contains 65 countries, including all but two from the evolution graph[^missing].
 Can any of these explain the USA's outlier position?

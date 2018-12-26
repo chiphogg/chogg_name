@@ -63,14 +63,14 @@ I still plan to do most or all of the things on my list.  The difference is that
 by doing them one at a time, and being satisfied with imperfect solutions,
 I actually stand a chance to get them _done_.
 
-[^1]: See [force-directed graphs](http://bl.ocks.org/mbostock/4062045),
+[^1]: See [force-directed graphs](https://bl.ocks.org/mbostock/4062045),
 [bar chart transitions with object
-constancy](http://bl.ocks.org/mbostock/3943967),
+constancy](https://bl.ocks.org/mbostock/3943967),
 and [more](https://github.com/mbostock/d3/wiki/Gallery).
 [^2]: Git is [notoriously bad at large
 files](https://help.github.com/articles/working-with-large-files).
 [^3]: By the way, I also didn't realize how much the [default nanoc
-page](http://nanoc.ws/assets/images/tutorial/default-site.png) was holding me
+page](https://nanoc.ws/assets/images/tutorial/default-site.png) was holding me
 back.  I spent too long tolerating its irrelevant sidebar while I tinkered with
 other pages.  It wasn't until I finally blew it away that I realized how
 distracting it had been, and I was amazed how quickly I made progress once it
@@ -78,14 +78,14 @@ was gone.  If _you're_ thinking of building a nanoc site, I recommend you gut
 the default sidebar right away.
 
 
-[mathbox.js]: http://acko.net/blog/making-mathbox/
-[default nanoc page]: http://nanoc.ws/assets/images/tutorial/default-site.png
+[mathbox.js]: https://acko.net/blog/making-mathbox/
+[default nanoc page]: https://nanoc.ws/assets/images/tutorial/default-site.png
 [markdown]: https://help.github.com/articles/github-flavored-markdown
-[knitr]: http://yihui.name/knitr/
-[mathjax]: http://www.mathjax.org/
-[WebGL]: http://get.webgl.org/
-[vector graphics]: http://en.wikipedia.org/wiki/Vector_graphics
-[d3.js]: http://d3js.org/
-[LaTeX]: http://latex-project.org/intro.html
-[MathML]: http://www.w3.org/Math/
-[pandoc]: http://johnmacfarlane.net/pandoc/
+[knitr]: https://yihui.name/knitr/
+[mathjax]: https://www.mathjax.org/
+[WebGL]: https://get.webgl.org/
+[vector graphics]: https://en.wikipedia.org/wiki/Vector_graphics
+[d3.js]: https://d3js.org/
+[LaTeX]: https://latex-project.org/intro.html
+[MathML]: https://www.w3.org/Math/
+[pandoc]: https://pandoc.org

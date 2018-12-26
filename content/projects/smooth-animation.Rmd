@@ -23,9 +23,9 @@ My further contribution is to recognize that **Gaussian oscillators are also Gau
 # Further reading
 
 - Here is [a poster I presented](https://github.com/chiphogg/poster_isba_2014/blob/master/chogg_animated-randomness_isba-2014.pdf?raw=true)
-  at the [Twelfth World Meeting of ISBA](http://isba2014.eventos.cimat.mx/) (2014).
+  at the [Twelfth World Meeting of ISBA](https://isba2014.eventos.cimat.mx/) (2014).
     - **NOTE**: The original version had an error in the implementation!  I forgot to divide by `sqrt(N)`.  The current version is fixed.
-- I gave an invited talk at the [SIAM CSE13](http://www.siam.org/meetings/cse13/) conference (2013).
+- I gave an invited talk at the [SIAM CSE13](https://www.siam.org/meetings/cse13/) conference (2013).
   Here is [a recording of the talk](https://client.blueskybroadcast.com/SIAM13/CS/siam_cse13_MS214_1/launch.asp?vAD=NTUwNDg=&vUS=LTk5&vMP=MA==&vHT=bGl2ZS5ibHVlc2t5YnJvYWRjYXN0LmNvbS8=&vPing=VHJ1ZQ==&vPICQ=RmFsc2U=&V=032118200237001051037189226106093058051138125067088087110207081113009231078125223121036208166198),
   and the [corresponding slides](http://bit.ly/SmoothAni).
 

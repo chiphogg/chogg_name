@@ -1,5 +1,5 @@
 Last week, the world was introduced to the [worst security bug in the history of
-the internet](http://xkcd.com/1353/). The so-called ["Heartbleed"
+the internet](https://xkcd.com/1353/). The so-called ["Heartbleed"
 vulnerability](http://heartbleed.com/) lets attackers steal arbitrary contents
 from remote servers -- and it was around for at least two years before security
 researchers found it.
@@ -86,7 +86,7 @@ the worst-case damage?
 First, all my eggs _aren't_ in just one basket.  If somebody gets my Gmail
 password, they still can't log into my account without my phone, because
 I use Gmail's two-factor authentication.  (By the way, [so should
-you](http://lifehacker.com/5932700/please-turn-on-two-factor-authentication).)
+you](https://lifehacker.com/5932700/please-turn-on-two-factor-authentication).)
 More and more sites support two-factor, and I use it for all of them.
 
 Second, that "one basket" comes from a company whose _entire business model_

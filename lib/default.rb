@@ -58,6 +58,14 @@ class KnitrFilter < Nanoc::Filter
 end
 
 
+class CardSymbolFilter < Nanoc::Filter
+  identifier :cards
+
+  def run(content, params={})
+  end
+end
+
+
 # Links to extra assets (javascript and CSS) requested in the yaml header.
 def extra_asset_links
   lines = []
