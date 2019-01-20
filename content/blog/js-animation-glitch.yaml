@@ -1,0 +1,7 @@
+title: Scratch that glitch!
+short_url: js_animation_glitch
+tldr: A strangely reproducible glitch in my javascript animation code was
+  driving me mad.  Turns out, it's a case where settings that are perfectly
+  reasonable in isolation can interact very poorly.
+js:
+  - plotly
