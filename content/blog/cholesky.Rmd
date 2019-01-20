@@ -128,7 +128,7 @@ So: yes, we _can_ compute the next row of the Cholesky decomposition if we know 
 ## This smells like induction
 
 We now know how to get $L_{n + 1}$ if we have $L_n$, but how do we get $L_n$ in the first place?
-One way is to call a library function -- always a good default strategy.
+One way is to call a library function---always a good default strategy.
 This works pretty well, until [it doesn't](https://github.com/jstat/jstat/blob/b3a72f52917403e948f628dfebd645f8cb925c52/src/linearalgebra.js#L284-L286).
 
 Another approach would be to start with $L_{n - 1}$, and use what we just figured out to add the final row.
@@ -140,7 +140,7 @@ The other ingredient is a _base case_: an answer for the smallest possible $n$ w
 
 In our case, the base case turns out to be trivial.
 The simplest matrix which could have a Cholesky decomposition is a $(1 \times 1)$ matrix; let's say $K = \left[ k \right]$ for some $k > 0$.
-Then $L = \left[ \sqrt{k} \right]$ -- what could be easier!
+Then $L = \left[ \sqrt{k} \right]$---what could be easier!
 
 We can put this all together to compute the elements of $L$ one at a time.
 Each new element uses $K$ and the elements of $L$ we've _already_ computed.
@@ -210,7 +210,7 @@ MyCholesky <- function(K) {
 
 `r N <- 20` 
 To test this, I'll construct a random $(`r N` \times `r N`)$ covariance matrix.
-I'll compute its Cholesky decomposition twice -- once with my method, and once with R's built-in `chol()` function -- and see how close the two answers are.
+I'll compute its Cholesky decomposition twice---once with my method, and once with R's built-in `chol()` function---and see how close the two answers are.
 
 ```{r test_cholesky}
 # Generate some points.

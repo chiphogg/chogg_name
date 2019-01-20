@@ -1,7 +1,7 @@
 Last week, the world was introduced to the [worst security bug in the history of
 the internet](https://xkcd.com/1353/). The so-called ["Heartbleed"
 vulnerability](http://heartbleed.com/) lets attackers steal arbitrary contents
-from remote servers -- and it was around for at least two years before security
+from remote servers---and it was around for at least two years before security
 researchers found it.
 
 Consequently, _most people have to change most of their passwords_.
@@ -13,8 +13,8 @@ if!) the weakest one gets compromised, the first thing the attacker will do is
 try your password on other sites: email, banking, etc.  This "option" is really
 no option at all.
 
-Unfortunately, the natural alternative -- memorizing multiple distinct strong
-passwords -- is too hard for almost everybody.  It gets even worse if you change
+Unfortunately, the natural alternative---memorizing multiple distinct strong
+passwords---is too hard for almost everybody.  It gets even worse if you change
 them regularly!  This approach inevitably leads to forgotten passwords (or else,
 it leads to you doing _nothing else with your life_ but memorizing them).
 
@@ -34,8 +34,8 @@ even if somebody guesses my LastPass password, they still can't get my _other_
 passwords unless they also have (and can unlock) my phone.
 
 I admit that I put off switching to LastPass for years.  When I finally did,
-I was kicking myself for all my wasted effort on my old password scheme --
-a scheme that was _far less secure_ than what LastPass now gives me
+I was kicking myself for all my wasted effort on my old password scheme---a
+scheme that was _far less secure_ than what LastPass now gives me
 _effortlessly_!
 
 ### Heartbleed response
@@ -113,7 +113,7 @@ uncertainty.
 
 Fortunately, you don't have to abandon your current password system to start
 using LastPass.  Just sign up, and add a few accounts to it.  Try it out until
-you're comfortable with it -- and if you aren't, you can always delete your
+you're comfortable with it---and if you aren't, you can always delete your
 LastPass account.  (They never get your unencrypted passwords, so you have
 nothing to lose.)
 

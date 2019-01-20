@@ -5,6 +5,16 @@ include Nanoc::Helpers::Blogging
 include Nanoc::Helpers::LinkTo
 
 
+def PandocParseSnippet(text)
+  output_inside_p_tag = PandocRuby.convert(text, 'smart')
+  return ExtractFromTag(output_inside_p_tag)
+end
+
+def ExtractFromTag(text)
+  doc_fragment = Nokogiri::HTML::DocumentFragment.parse(text)
+  return doc_fragment.text
+end
+
 # A 'short name' for a blog post, suitable for forming part of a URL.  It
 # doesn't have to be unique, but it should be unique per date.
 def ShortBlogName(item)

@@ -52,7 +52,7 @@ Syncopate is a maktaba plugin, so it's easy to [configure it with Glaive](https:
 Here are a few examples.
 
 - `change_colorscheme`:  Set this to false to keep your current colorscheme, and export *exactly* what you see.  (This is true by default because the default colorscheme works better on the white-ish backgrounds one commonly encounters in practice.)
-- `clear_bg`:  Setting this will output a *transparent* background.  Useful when your colorscheme almost-but-not-quite matches the background of your slides -- or especially if those slides have a color gradient!
+- `clear_bg`:  Setting this will output a *transparent* background.  Useful when your colorscheme almost-but-not-quite matches the background of your slides---or especially if those slides have a color gradient!
 
 So if you wanted to export your current colorscheme, except with a transparent background, you might use a line like this:
 
@@ -60,7 +60,7 @@ So if you wanted to export your current colorscheme, except with a transparent b
 Glaive syncopate !change_colorscheme clear_bg
 ```
 
-This works in your `.vimrc`, or -- with tab-completion! -- on the fly in a live vim session.
+This works in your `.vimrc`, or---with tab-completion!---on the fly in a live vim session.
 
 ## So, what's missing?
 

@@ -1,7 +1,7 @@
 I've been wanting to redo my website for a few years now.
 
 I thought I could motivate myself by purchasing the domain name.  Paying actual
-money -- surely that would get me moving!  I learned otherwise when the one-year
+money---surely that would get me moving!  I learned otherwise when the one-year
 renewal bill came and I hadn't done a thing.
 
 But now I _do_ have a website (obviously).  So what was stopping me before, and
@@ -16,7 +16,7 @@ voraciously reading about all kinds of new (to me) technologies.
   without looking like tag soup.
 - [knitr] lets you stick snippets of R code inside a markdown document, and
   _automatically replace them with the results of **running** that code_.
-- [mathjax] finally -- _finally!_ -- brings the power of [LaTeX] equations to
+- [mathjax] finally---_finally!_---brings the power of [LaTeX] equations to
   the modern web (i.e., [MathML] instead of hideous rendered gifs).
 - [WebGL] puts plugin-free interactive 3D environments right in the browser
   window.

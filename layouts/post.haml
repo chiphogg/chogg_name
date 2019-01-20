@@ -7,6 +7,6 @@
   - if item.attributes.has_key?(:tldr)
     %aside.tldr
       <b>tl;dr:</b>
-      = item[:tldr]
+      = PandocParseSnippet(item[:tldr])
   %article
     = yield

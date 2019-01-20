@@ -1,11 +1,11 @@
 The key to science is reproducibility: if others can't check your work, it might as well not exist.
 
-This idea is evolving into a concept called [reproducible research](https://www.coursera.org/course/repdata): don't just publish the results of an analysis, publish the analysis itself --- including the raw data and software.
+This idea is evolving into a concept called [reproducible research](https://www.coursera.org/course/repdata): don't just publish the results of an analysis, publish the analysis itself---including the raw data and software.
 This accelerates progress: providing working code makes it easier to verify the results, and easier to build on them.
 
 This applies to scientific _blogging_, too.
 Blogs are already a fast way to spread ideas.
-Blogs with data and software included --- "_reproducible_ blogs" --- are even faster.
+Blogs with data and software included---"_reproducible_ blogs"---are even faster.
 Not to mention, it's harder for mistakes to hide.
 
 ## Tips for reproducible blogging with knitr

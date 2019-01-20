@@ -41,7 +41,7 @@ Here are a few examples.
 +-----+-------------------------------+-------------+
 
 What a delightful result!  It shows that Fibonacci sums are as easy to compute
-as Fibonacci numbers.  This raises the question -- how easy are Fibonacci
+as Fibonacci numbers.  This raises the question---how easy are Fibonacci
 numbers to compute?
 
 ## Binet's formula and the golden ratio
@@ -106,7 +106,7 @@ print(fib_compare, row.names=FALSE)
 
 Looks like the concern was justified: things go awry somewhere between $F_{70}$
 and $F_{75}$.  Still, the formula works remarkably well until that point.
-Especially considering the application -- it'll be a long time before any
+Especially considering the application---it'll be a long time before any
 illolifer hits level 70!
 
 ## A surprising connection
@@ -123,7 +123,7 @@ Consider the first one: the sum over a sequence gives the same sequence[^3].
 For _continuous_ quantities (instead of _discrete_), we'd have integrals instead
 of sums, and functions instead of sequences.  So, this is like saying the
 _integral_ of a _function_ gives that same _function_.  This is a well-known
-property of [exponential functions]!  How suggestive -- do the Fibonacci numbers
+property of [exponential functions]!  How suggestive---do the Fibonacci numbers
 grow exponentially?
 
 They do.  Look at Binet's formula, and realize that

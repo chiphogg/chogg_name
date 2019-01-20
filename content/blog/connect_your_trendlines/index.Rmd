@@ -247,7 +247,7 @@ p <- (ggplot(data=d_rss, aes(x=date))
 print(p)
 ```
 
-These data fluctuate -- a *lot*.
+These data fluctuate---a *lot*.
 The fluctuations represent actual physical events, but for our purposes they're just noise: we're looking for underlying *trends* in the data.
 
 Not much is clear at first glance.
@@ -274,7 +274,7 @@ print(p
       )
 ```
 
-This model is exceedingly simple -- and that is its strength!
+This model is exceedingly simple---and that is its strength!
 More complicated models risk mistaking noise for signal.
 This phenomenon is called "overfitting", and we want to avoid it.
 

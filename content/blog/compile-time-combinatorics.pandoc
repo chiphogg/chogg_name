@@ -1,4 +1,4 @@
-Compile-time computation has obvious appeal: any work you do when you _build_ the program is already done when you _run_ it -- hence, faster programs.
+Compile-time computation has obvious appeal: any work you do when you _build_ the program is already done when you _run_ it---hence, faster programs.
 
 This sounds great in theory, but a problem soon arises in practice.
 Most of the things you want to compute, you won't know until you run the program.
@@ -33,13 +33,13 @@ The post is rather long, as it's meant as a complete guide for readers looking t
 
 - my utter delight at rediscovering the simple elegance of the formula for computing combinatorics (so simple, a child could understand it!);
 - a surprisingly concise, fast, and accurate square-root function;
-- and, the final API we expose to the users -- I hope it communicates its abilities and limitations in a natural way.
+- and, the final API we expose to the users---I hope it communicates its abilities and limitations in a natural way.
 
 Let's begin.
 
 ## Computations for specific values of $N$ and $K$
 
-We'll start with the core code -- the part which does the actual computations.
+We'll start with the core code---the part which does the actual computations.
 
 ```
 #!cpp
@@ -68,7 +68,7 @@ $$\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}.$$
 
 That's the _mathematical_ elegance here.  The _computational_ elegance is that we get the benefits of [dynamic programming](https://medium.freecodecamp.org/demystifying-dynamic-programming-3efafb8d4296) for free.  In other words, the compiler computes every $(n,k)$ pair only once, and automatically reuses the answer after that (because it is encoded in a _type_, and each type is defined only once).  This is a very good thing, since otherwise, the time to compute each number would be proportional to the number itself.  $\binom{n}{k}$ gets pretty big, pretty fast.  If we let $n$ go up to only, say, 52 (since there are 52 cards in the deck), there are some individual answers which would take half a _quadrillion_ steps to compute!
 
-So, we have a computationally efficient implementation of a mathematically elegant relationship.  That's great, but so far, it won't actually compute anything.  We've defined our computation in terms of simpler values, but we've never said what those simpler values _are_.  We need a base case -- or rather, two.
+So, we have a computationally efficient implementation of a mathematically elegant relationship.  That's great, but so far, it won't actually compute anything.  We've defined our computation in terms of simpler values, but we've never said what those simpler values _are_.  We need a base case---or rather, two.
 
 ```
 #!cpp
@@ -106,7 +106,7 @@ You could be forgiven for wondering whether we really need this special case at 
 
 There's a problem here.
 
-We can compute any values we want for $\binom{n}{k}$ at compile time -- that is, at the time the program gets **built**.  But we won't know which values we actually _want_ to compute until the program gets **run**!  In other words, we can handle something like `Choose<52, 5>`, no sweat.  But if we have _variables_ $n = 52$ and $k = 5$ when our program's running, we _can't_ compute `Choose<n, k>`, because everything inside the `<...>` has to finish _before_ the program gets run.
+We can compute any values we want for $\binom{n}{k}$ at compile time---that is, at the time the program gets **built**.  But we won't know which values we actually _want_ to compute until the program gets **run**!  In other words, we can handle something like `Choose<52, 5>`, no sweat.  But if we have _variables_ $n = 52$ and $k = 5$ when our program's running, we _can't_ compute `Choose<n, k>`, because everything inside the `<...>` has to finish _before_ the program gets run.
 
 Here's a two-step strategy to make this actually useful:
 
@@ -188,7 +188,7 @@ choose_values(std::index_sequence<Is...>)
 }
 ```
 
-We're using _variadic templates_ -- that is, templates that accept an arbitrary number of parameters.  I had always shied away from learning how to use these, as the syntax looked strange and forbidding to me.  But working through a simple example like this helped me see they're actually pretty straightforward.  We get an index sequence (whose size and contents are known at compile time), and we build an array of the same size, turning each index into the corresponding $\binom{n}{k}$ value.
+We're using _variadic templates_---that is, templates that accept an arbitrary number of parameters.  I had always shied away from learning how to use these, as the syntax looked strange and forbidding to me.  But working through a simple example like this helped me see they're actually pretty straightforward.  We get an index sequence (whose size and contents are known at compile time), and we build an array of the same size, turning each index into the corresponding $\binom{n}{k}$ value.
 
 With this in hand, all that's left is to pass the _right_ indices.
 
@@ -249,7 +249,7 @@ const std::array<uint64_t, internal::num_values_up_to(N_max)>
 
 The `assert()`s here are worth commenting on.
 Some folks [feel that they should never be used](https://www.softwariness.com/articles/assertions-in-cpp/).
-I don't agree -- I think this is a proper use of `assert()`.
+I don't agree---I think this is a proper use of `assert()`.
 It guards against programming errors only, not user input (since this class should never take user input directly).
 And, given that the whole point of this is to make combinatorics as fast as possible, I _want_ the compiler to remove these statements completely when I turn off debug mode.
 

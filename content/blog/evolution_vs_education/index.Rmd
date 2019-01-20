@@ -169,7 +169,7 @@ print(p)
 ```
 
 While the US is a little low in Mathematics (middle graph), it's certainly not an outlier.
-And the other two scores -- Reading and Science -- are precisely in line with the rest of the data.
+And the other two scores---Reading and Science---are precisely in line with the rest of the data.
 
 No matter how you slice it, America's dismal understanding of evolution can't be explained by its solidly mediocre education levels.
 
