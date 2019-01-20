@@ -70,6 +70,8 @@ If we take exactly the same keyframes---i.e., the same $x$ and $y$ values---but 
 
 Here's an example.
 We'll take a simple sinusoidal wave undergoing periodic motion.
+We'll also pause for a bit each time we reach a keyframe, simply to make it easier to tell when we reach one.
+(**Note** that in a real animation, we wouldn't pause at the keyframes -- as soon as we reach one, we would immediately begin moving to the next!)
 
 First, we'll say that datapoints are "the same" if they have the same $x$-value:
 
