@@ -38,7 +38,7 @@ compile '/blog/*' do
     filter :knitr
   end
   if item[:extension] != 'R'
-    filter :pandoc, args: ['mathjax', 'smart']
+    filter :pandoc, args: [{:from => 'markdown+smart', :to => 'html-smart'}, :mathjax]
     filter :colorize_syntax, :default_colorizer => :pygmentsrb
     layout 'post'
     layout 'default'
@@ -49,7 +49,7 @@ compile '/projects/*' do
   if item[:extension] == 'Rmd'
     filter :knitr
   end
-  filter :pandoc, args: ['mathjax', 'smart']
+  filter :pandoc, args: [{:from => 'markdown+smart', :to => 'html-smart'}, :mathjax]
   filter :colorize_syntax, :default_colorizer => :pygmentsrb
   layout 'project'
   layout 'default'
@@ -64,7 +64,7 @@ compile '*' do
     if item[:extension] == 'Rmd'
       filter :knitr
     end
-    filter :pandoc, args: ['mathjax', 'smart']
+    filter :pandoc, args: [{:from => 'markdown+smart', :to => 'html-smart'}, :mathjax]
     layout 'default'
   end
 end
