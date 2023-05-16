@@ -73,5 +73,8 @@ RUN Rscript -e "install.packages('scales')"
 # Set the working directory
 WORKDIR /site
 
+# Give non-root users necessary permissions
+RUN chmod -R a+rx /root
+
 # Start the container with a command to execute the script
 CMD ["bash"]

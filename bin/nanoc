@@ -4,6 +4,7 @@ docker build -t nanoc-docker bin/
 
 docker run \
   --rm \
+  --user $(id -u):$(id -g) \
   -e LANG=C.UTF-8 \
   -v "/home/chogg/github/chogg_name:/site" \
   -w "/site" \
