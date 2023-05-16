@@ -20,12 +20,12 @@ compile '/assets/*/' do
 end
 
 compile '/blog/' do
-  filter :haml
+  filter :haml, :escape_html => false
   layout 'default'
 end
 
 compile '/projects/' do
-  filter :haml
+  filter :haml, :escape_html => false
   layout 'default'
 end
 
@@ -114,4 +114,4 @@ route '*' do
   end
 end
 
-layout '*', :haml
+layout '*', :haml, :escape_html => false
