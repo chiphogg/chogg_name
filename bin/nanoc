@@ -8,5 +8,7 @@ docker run \
   -e LANG=C.UTF-8 \
   -v "/home/chogg/github/chogg_name:/site" \
   -w "/site" \
+  -t -i \
+  --net=host \
   nanoc-docker \
   sh -c "nanoc $@"
