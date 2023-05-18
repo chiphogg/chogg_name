@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-docker build -t nanoc-docker bin/
+docker build -t nanoc-docker bin/ > /dev/null
 
 docker run \
   --rm \
