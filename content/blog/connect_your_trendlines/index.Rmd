@@ -129,15 +129,19 @@ PrintTrend <- function(temperature, time_span='century') {
 
 # A geom_text to label a line.
 TextLabel <- function(label, d, column, ...) {
+  my_d <- d['date']
+  my_d['y'] <- d[column]
   geom_text(label=label,
-            data=d[round((1 + nrow(d)) / 2), ],
-            aes_string(x='date', y=column),
-            hjust=0, vjust=1.5, size=10, ...)
+            data=my_d[round((1 + nrow(my_d)) / 2), ],
+            aes(x=date, y=y),
+            hjust=0, vjust=1.5, size=8, ...)
 }
 
 # A geom_line to show a fit.
 FitLine <- function(d, column, ...) {
-  geom_line(data=d, aes_string(x='date', y=column), size=1.2, ...)
+  my_d <- d['date']
+  my_d['y'] <- d[column]
+  geom_line(data=my_d, aes(x=date, y=y), linewidth=1.2, ...)
 }
 
 # The (first) index of the element in y whose following element increases by
@@ -265,7 +269,9 @@ That trend is the *slope* of the line of best fit: here, we find `r PrintTrend(s
 colour_single <- 'purple'
 column_single <- 'single'
 line_single <- FitLine(d=d_rss, column=column_single, colour=colour_single)
-label_single <- TextLabel(PrintTrend(single_trendline_slope), d_rss, 'single',
+label_single <- TextLabel(PrintTrend(single_trendline_slope),
+                          d_rss,
+                          'single',
                           colour=colour_single)
 print(p
       + line_single
@@ -347,10 +353,10 @@ colour_conn <- 'red'
 column_conn <- 'connected'
 line_conn <- FitLine(d=d_rss, column=column_conn, colour=colour_conn)
 label_conn_before <- TextLabel(PrintTrend(good_slope_before),
-                               d_rss[nrow(d_rss)*0.15, ], column_conn,
+                               d_rss[as.integer(nrow(d_rss)*0.15), ], column_conn,
                                colour=colour_conn)
 label_conn_after <- TextLabel(PrintTrend(good_slope_after),
-                              d_rss[nrow(d_rss)*0.65, ], column_conn,
+                              d_rss[as.integer(nrow(d_rss)*0.65), ], column_conn,
                               colour=colour_conn)
 
 p_connected <- (p
@@ -381,10 +387,10 @@ column_newpause <- 'newpause'
 line_newpause <- FitLine(d=d_rss, column=column_newpause,
                          colour=colour_newpause)
 label_newpause_before <- TextLabel(PrintTrend(pause_slope_before),
-                               d_rss[nrow(d_rss)*0.15, ], column_newpause,
+                               d_rss[as.integer(nrow(d_rss)*0.15), ], column_newpause,
                                colour=colour_newpause)
 label_newpause_after <- TextLabel(PrintTrend(pause_slope_after),
-                              d_rss[nrow(d_rss)*0.65, ], column_newpause,
+                              d_rss[as.integer(nrow(d_rss)*0.65), ], column_newpause,
                               colour=colour_newpause)
 print(p
       + line_newpause
