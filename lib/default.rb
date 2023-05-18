@@ -6,7 +6,7 @@ include Nanoc::Helpers::LinkTo
 
 
 def PandocParseSnippet(text)
-  output_inside_p_tag = PandocRuby.convert(text, {:from => 'markdown+smart', :to => 'html-smart'})
+  output_inside_p_tag = PandocRuby.convert(text, {:from => 'markdown+smart', :to => 'html-smart'}, {:wrap => :none})
   return ExtractFromTag(output_inside_p_tag)
 end
 
