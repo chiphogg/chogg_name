@@ -1,4 +1,6 @@
 title: Scratch that glitch!
+kind: article
+created_at: 2019-01-20 17:29
 short_url: js_animation_glitch
 tldr: A strangely reproducible glitch in my javascript animation code was
   driving me mad.  Turns out, it's a case where settings that are perfectly
