@@ -1,5 +1,4 @@
-# Use the official Ruby image as the base
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # See https://github.com/rbenv/rbenv/issues/900#issuecomment-544985902
 SHELL ["/bin/bash","-l","-c"]
@@ -8,7 +7,7 @@ ENV TZ=America/New_York
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install basic dependencies
-RUN apt-get update && apt-get install -y curl git
+RUN apt-get update && apt-get install -y curl git wget python3
 
 # Install deps suggested by:
 # https://github.com/rbenv/ruby-build/wiki#suggested-build-environment
@@ -19,23 +18,21 @@ RUN apt-get install -y \
     rustc \
     libssl-dev \
     libyaml-dev \
-    libreadline6-dev \
+    libreadline-dev \
     zlib1g-dev \
     libgmp-dev \
-    libncurses5-dev \
+    libncurses-dev \
     libffi-dev \
-    libgdbm6 \
+    libgdbm6t64 \
     libgdbm-dev \
     libdb-dev \
     uuid-dev
 
-# Install pandoc
-RUN apt-get install -y haskell-platform
-RUN apt-get install -y pkg-config
-RUN cabal update
-RUN cabal install pandoc
-RUN cabal install pandoc-cli
-ENV PATH /root/.cabal/bin:$PATH
+# Install pandoc (prebuilt binary)
+RUN wget -q https://github.com/jgm/pandoc/releases/download/3.9/pandoc-3.9-linux-amd64.tar.gz \
+    && tar xzf pandoc-3.9-linux-amd64.tar.gz \
+    && cp pandoc-3.9/bin/pandoc /usr/local/bin/ \
+    && rm -rf pandoc-3.9 pandoc-3.9-linux-amd64.tar.gz
 
 # Install rbenv
 RUN git clone https://github.com/rbenv/rbenv.git ~/.rbenv
@@ -44,21 +41,18 @@ RUN echo 'eval "$(rbenv init -)"' >> ~/.profile
 
 # Install Ruby version using rbenv
 RUN git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
-ENV PATH /root/.rbenv/shims:/root/.rbenv/bin:$PATH
-RUN rbenv install 3.2.2
-RUN rbenv local 3.2.2
+ENV PATH=/root/.rbenv/shims:/root/.rbenv/bin:$PATH
+RUN rbenv install 3.3.7
+RUN rbenv local 3.3.7
 RUN rbenv rehash
 
-# Install Bundler and Nanoc
+# Install Bundler
 RUN gem install bundler
-RUN gem install nanoc
 
-# Install other gems I've used for blogging
-RUN gem install haml
-RUN gem install pandoc-ruby
-RUN gem install pygments.rb
-RUN gem install adsf
-RUN gem install nokogiri
+# Copy Gemfile and install gems
+COPY Gemfile /site/Gemfile
+WORKDIR /site
+RUN bundle install
 
 # Install R and necessary packages
 RUN apt-get install -y r-base
@@ -69,9 +63,6 @@ RUN Rscript -e "install.packages('lubridate')"
 RUN Rscript -e "install.packages('XML')"
 RUN Rscript -e "install.packages('reshape2')"
 RUN Rscript -e "install.packages('scales')"
-
-# Set the working directory
-WORKDIR /site
 
 # Give non-root users necessary permissions
 RUN chmod -R a+rx /root

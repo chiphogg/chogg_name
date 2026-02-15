@@ -1,0 +1,8 @@
+source 'https://rubygems.org'
+
+gem 'nanoc'
+gem 'haml', '~> 6.0'
+gem 'pandoc-ruby'
+gem 'pygments.rb'
+gem 'adsf'
+gem 'nokogiri'
