@@ -82,7 +82,13 @@ route '/projects/' do
 end
 
 route '/blog/*/data/*' do
-  # Do not output datafiles.
+  if item.binary?
+    parent_id = item.identifier.to_s.sub(%r{data/.+/$}, '')
+    parent = @items[parent_id]
+    filename = item.identifier.to_s.match(%r{/data/(.+)/$})[1]
+    [OutputDirectory(parent), filename].join('/') + '.' + item[:extension]
+  end
+  # Non-binary datafiles (e.g. CSV) are not output.
 end
 
 route '/blog/*' do
