@@ -282,7 +282,15 @@
   }
 
   .nav-btn {
-    min-width: 80px;
     padding: 0.6rem 0.8rem;
+  }
+
+  .transcript-nav {
+    gap: 0.5rem;
+  }
+
+  .nav-progress {
+    min-width: 60px;
+    font-size: 0.8rem;
   }
 }

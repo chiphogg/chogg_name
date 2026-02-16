@@ -195,3 +195,29 @@ code .vg { color: #98fb98} /* Name.Variable.Global */
 code .vi { color: #98fb98} /* Name.Variable.Instance */
 code .il { color: #ffffff} /* Literal.Number.Integer.Long */
 
+/* Mobile responsive */
+@media (max-width: 600px) {
+  #main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  #source {
+    position: static;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  #main #post aside.tldr {
+    width: 100%;
+  }
+
+  pre code {
+    font-size: 0.85rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
