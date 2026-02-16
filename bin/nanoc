@@ -6,9 +6,9 @@ docker run \
   --rm \
   --user $(id -u):$(id -g) \
   -e LANG=C.UTF-8 \
+  -e BUNDLE_GEMFILE=/site/bin/Gemfile \
   -v "/home/chogg/github/chogg_name:/site" \
   -w "/site" \
   --net=host \
   nanoc-docker \
-  -e BUNDLE_GEMFILE=/site/bin/Gemfile \
   sh -c "bundle exec nanoc $@"
