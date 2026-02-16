@@ -2,8 +2,14 @@
 
 docker build -t nanoc-docker bin/ > /dev/null
 
+tty_flags=""
+if [ -t 0 ]; then
+  tty_flags="-it"
+fi
+
 docker run \
   --rm \
+  $tty_flags \
   --user $(id -u):$(id -g) \
   -e LANG=C.UTF-8 \
   -e BUNDLE_GEMFILE=/site/bin/Gemfile \
